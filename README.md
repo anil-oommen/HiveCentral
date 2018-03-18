@@ -1,6 +1,6 @@
 # HiveCentral
 Web Application & Controller for the **HiveBot** IOT Devices.
-![FirstImage](docs/app.droid.image1.jpg)
+![Integration Image](docs/app.integration.full.png)
 
 ## Technology Stack
  - Framework & Libraries
