@@ -9,8 +9,6 @@ src/main/webapp/static/ng/
 src/main/ngapp/node_modules/
 
 
-
-
 ### from idea Project generated file.
 target/
 !.mvn/wrapper/maven-wrapper.jar

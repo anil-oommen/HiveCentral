@@ -1,5 +1,16 @@
 # HiveCentral
-Web Application & Controller for the **HiveBot** IOT Devices.
+Web Application & Controller for the **HiveBot** IOT Devices. The controllers has services to register and maintain life cycle and the status of the IOT Bots. All IOT devices refered as **HiveBot**  have to connect via common MQTT bridge and follow the custom protocol and JSON format for data exchange.
+
+## Features
+  - REST API for Registering new HiveBots , view DataMap and Instructions.
+  - REST API for sending Instructions to HiveBots
+  - Integration  MICLIMATE  HiveBot for Temperature , Humidity , IR Signals from Aircon
+  - Integration with NEA to source outdoor weather.
+  - Charting for sensor data using ChartJS
+  - Support for AirCon registered profiles used by HiveBots to send IR signals.
+  - Scheduling instructions for HiveBots with features to pull all instruction backlogs after DeepSleep or Cold Restarts.
+  - Progress Web App ( Under Development) 
+
 ![Integration Image](docs/app.integration.full.png)
 
 ## Technology Stack
