@@ -51,32 +51,6 @@ public class BotController {
     @Autowired
     JsonLogHelper jsonLogHelper;
 
-
-    //@Value("#{'${hivecentral.registered.bots}'.split(',')}")
-   // private List<String> registeredBots;
-
-
-    /*@RequestMapping(value= "iot.aqua.bot/heartbeat", method = RequestMethod.GET)
-    @ApiOperation(value = "BOT Is Alive Heartbeat",response = HiveCentralResponse.class)
-    public HiveCentralResponse heartbeat(
-            @RequestParam(value = "bot-id", required=false, defaultValue="NOVALUE" ) String botid,
-            @RequestParam(value = "bot-version", required=false, defaultValue="" ) String botversion,
-            @RequestParam(value = "bot-status", required=false, defaultValue="" ) String botstatus
-    ) {
-        System.out.println(botid + " " + botversion + " " + botstatus);
-
-
-        if(registeredBots.contains(botid)){
-            HiveCentralResponse rep = new HiveCentralResponse("OK", "Authorized and Accepted.");
-            reportingService.heartbeat(botid,botversion,botstatus);
-            return rep;
-        }else{
-            HiveCentralResponse rep = new HiveCentralResponse("ERR", "BOT not Registered:" + botid);
-            return rep;
-        }
-
-    }*/
-
     @RequestMapping(value= "/all.clients", method = RequestMethod.GET )
     public HiveCentralResponse allClients(){
         HiveCentralResponse rep = new HiveCentralResponse("OK", "List of Clients");
@@ -196,40 +170,6 @@ public class BotController {
                     notificationService.updateFunctions(hiveBot);
                     responseBotData.setStatus("ACK");
                     responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.ACCEPTED);
-
-                /* Deprecated , now using MQTT
-                } else if (action.toLowerCase().startsWith("instruction_executed")){
-                    if(StringUtils.isEmpty(instruction_id1)
-                            && StringUtils.isEmpty(instruction_command)
-                            ){
-                        responseBotData.setStatus("ERR.BOT_INSTRUCTION_INCOMPLETE");
-                        responseBotData.setMessage("Instruction Id/Command not passed.Tsk,Tsk. Bad Bot");
-                        responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.BAD_REQUEST);
-                    }else if(StringUtils.isEmpty(instruction_result) ) {
-                        responseBotData.setStatus("ERR.BOT_INSTRUCTION_INCOMPLETE");
-                        responseBotData.setMessage("Instruction Command Results not passed.Tsk,Tsk. Bad Bot");
-                        responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.BAD_REQUEST);
-                    }else {
-                        HiveBot hiveBot = reportingService.markInstructionCompleted(
-                                botData,
-                                Long.parseLong(instruction_id1),
-                                instruction_command,
-                                instruction_result,
-                                getEnumSaveOperations(action)
-                        );
-                        responseBotData = BotClientDataMapper.dumpToJSON(hiveBot, responseBotData, true);
-                        responseBotData.setMessage("Ok " +
-                                botData.getHiveBotId() + ". Marked Instruction as Completed. Check remaining instructions."
-                        );
-
-                        logger.info("\t+" + botData.getHiveBotId() + ":  $  Reporting <EXECUTED: " +
-                                "Id:" + instruction_id1 +
-                                ", Command:" + instruction_command +
-                                ", Result:" + instruction_result + ">");
-                        responseBotData.setStatus("ACK");
-                        responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.ACCEPTED);
-                    }
-                    */
                 }else{
                     throw new BotDataParseException("Unsupported Action:" + action);
                 }

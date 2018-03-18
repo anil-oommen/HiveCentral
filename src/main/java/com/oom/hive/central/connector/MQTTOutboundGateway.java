@@ -5,5 +5,5 @@ import org.springframework.integration.annotation.MessagingGateway;
 
 @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
 public interface MQTTOutboundGateway {
-    void sendToMqtt(HiveBotData botData);
+    void sendToMqtt(HiveBotData botData) ;
 }

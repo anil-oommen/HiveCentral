@@ -41,22 +41,7 @@ public class TimeSeriesDataCompiler {
                                              int flashBackMinutes,
                                              int intervalMinutes){
         ChartJSData chartJsData = new ChartJSData();
-        /*
-        MongoClient mongoClient = new MongoClient("192.168.1.100", 27017);
-        MongoDatabase mongoDb = mongoClient.getDatabase("hivecentral_db");
-        MongoCollection dbCollHiveBotEvent = mongoDb.getCollection("hiveBotEvent");
-        Bson query = and(
-                eq("botId","OOMM.HIVE MICLIM.02"),
-                in("key","Temperature","HumidityPercent")
-        );
-        FindIterable<HiveBotEvent> resultData = dbCollHiveBotEvent.find(query).;
-        resultData.forEach((Consumer<HiveBotEvent>) event -> {
-            System.out.println(event.botId);
-        });
 
-        HiveBotEventsRepository hr ;
-        hr.find
-        */
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime ldtEndWindow = LocalDateTime.now();
@@ -74,8 +59,6 @@ public class TimeSeriesDataCompiler {
             System.out.print("   " + (ldtStartWindow.getMinute()%intervalMinutes));
 
 
-            //System.out.print("    " + ldtStartWindow.format(formatter));
-            //System.out.print("   " + (ldtStartWindow.getMinute()%intervalMinutes));
 
             System.out.println();
             ldtStartWindow = ldtStartWindow.plusMinutes(intervalMinutes);

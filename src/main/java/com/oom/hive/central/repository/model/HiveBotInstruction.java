@@ -25,10 +25,6 @@ public class HiveBotInstruction {
         this.params = params;
         this.execute = execute;
     }
-    /*public HiveBotInstruction(long instrId,String command, String schedule, String params)
-    {
-        this(instrId,command,schedule,params,false);
-    }*/
 
     public String getCommand() {
         return command;

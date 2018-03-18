@@ -38,36 +38,7 @@ public class ChartingSerivceImpl implements ChartingService{
 
         ChartJSData chartJsData = new ChartJSData();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        /*LocalDateTime ldtEndWindow = LocalDateTime.now();
-        LocalDateTime ldtStartWindow = LocalDateTime.now();
-        {
-            //Adjust Window to closest rounded value.
-            ldtStartWindow = ldtStartWindow.minusMinutes(flashBackMinutes + intervalMinutes);
-            ldtStartWindow = ldtStartWindow.minusMinutes((ldtStartWindow.getMinute() % intervalMinutes));
-            ldtStartWindow = ldtStartWindow.minusSeconds(ldtStartWindow.getSecond());
-        }
 
-        List<TemperatureHumidity> dataListTempHumidity = new ArrayList<TemperatureHumidity>();
-
-        //Date altStartTime = java.sql.Timestamp.valueOf( ldtStartWindow );
-
-
-        //Construct TimeSeries Intervals with Defaulted Value
-        while(ldtStartWindow.isBefore(ldtEndWindow)){
-
-            //System.out.print(ldtStartWindow.format(formatter));
-            //System.out.print("   " + (ldtStartWindow.getMinute()%intervalMinutes));
-            dataListTempHumidity.add(new TemperatureHumidity(0,0,
-                    java.sql.Timestamp.valueOf( ldtStartWindow )
-            ));
-
-            //System.out.print("    " + ldtStartWindow.format(formatter));
-            //System.out.print("   " + (ldtStartWindow.getMinute()%intervalMinutes));
-
-            //System.out.println();
-            ldtStartWindow = ldtStartWindow.plusMinutes(intervalMinutes);
-        }
-        */
 
         TemperatureHumidityTSeries thTSeries = new TemperatureHumidityTSeries(flashBackMinutes,  intervalMinutes);
         logger.info( "CHART Querying for Events on:" + hiveBotId +
@@ -90,10 +61,6 @@ public class ChartingSerivceImpl implements ChartingService{
             eventStream.close();
         }
 
-        /*Iterator<TemperatureHumidity> thIter = thTSeries.dataListTempHumidity.iterator();
-        thIter.forEachRemaining(th->{
-            System.out.println(th.getSeriesDate() + "  " + th.getTemperature() + " " + th.getHumidity());
-        });*/
 
         //remove all 0 values .
         thTSeries.dataListTempHumidity.removeIf(thData-> thData.getTemperature()==0 );
@@ -143,9 +110,6 @@ public class ChartingSerivceImpl implements ChartingService{
             return startDateTime;
         }
 
-        /*public TemperatureHumidity getCurrentTSeries(){
-            return currentTempHumdTS;
-        }*/
 
         private boolean _moveNextTSeries(){
             if(itrTempHumdTS.hasNext()){

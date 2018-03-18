@@ -144,7 +144,7 @@ public class InstructionServiceImpl implements InstructionService{
                         botSchedule);
             }
         }catch(RuntimeException rEx){
-            logger.error("           --Error Parsing Schedule Expression " +
+            logger.error( "           --Error Parsing Schedule Expression " +
                     botId + ":" + botInstrId +" " +
                     botSchedule +" " + rEx.getMessage() +" Ignoring.");
         }

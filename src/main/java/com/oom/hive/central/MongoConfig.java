@@ -29,18 +29,6 @@ public class MongoConfig {
     @Value( "${mongodb.password}" )
     String password;
 
-
-
-    /*@Bean
-    @Profile("StandaloneTesting")
-    public MongoTemplate mongoTemplateEmbeddedNonPersistant() throws IOException {
-        EmbeddedMongoFactoryBean mongo = new EmbeddedMongoFactoryBean();
-        mongo.setBindIp(MONGO_DB_URL);
-        MongoClient mongoClient = mongo.getObject();
-        MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, MONGO_DB_NAME);
-        return mongoTemplate;
-    }*/
-
     @Bean
     public MongoTemplate mongoTemplate() {
         MongoClient mongoClient = new MongoClient(hostname,port);

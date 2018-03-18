@@ -21,61 +21,6 @@ public class BotClientDataMapper {
 
 
 
-    /*
-    public static HiveBotData dumpToJSON(HiveBot hiveBot ,HiveBotData hiveBotData, boolean includeCompleteData)  {
-
-        hiveBotData.setHiveBotId(hiveBot.getBotId());
-        hiveBotData.setHiveBotVersion(hiveBot.getBotVersion());
-        hiveBotData.setTimestamp(AppSettings.formatDate(hiveBot.getLastHearbeat()));
-        //hiveBotData.setEpochTime(hiveBot.getLastHearbeat().getTime());
-        hiveBotData.setEnabledFunctions(hiveBot.getEnabledFunctions());
-
-
-        //hiveBot.
-
-        if(includeCompleteData) {
-            //int dataMapSize = 0;
-            for (Map.Entry<String, String> entry : hiveBot.getDataMap().entrySet()) {
-                hiveBotData.getDataMap().put(entry.getKey(), entry.getValue());
-            }
-            //dataMapSize++;
-            hiveBotData.getDataMap().put("data.map.size",""+hiveBotData.getDataMap().size());
-
-            hiveBot.getInstructions()
-                    .forEach(
-                            instr-> hiveBotData.getInstructions()
-                                    .add(new Instruction(
-                                            instr.getInstrId(),
-                                            instr.getCommand(),
-                                            instr.getSchedule(),
-                                            instr.getParams(), instr.isExecute()
-                                    ))
-                    );
-            hiveBotData.getDataMap().put("instruction.coll.size",""+hiveBot.getInstructions().size());
-        }
-
-
-        return hiveBotData;
-    }*/
-
-
-
-
-    /*private static HiveBot enrichSensorStatusWithEpochTime(HiveBot hiveBot){
-        Map<String,String> extMap = new HashMap<String,String>();
-        //hiveBot.getDataMap().forEach();
-
-        for (Map.Entry<String, String> entry : hiveBot.getDataMap().entrySet()) {
-            if(entry.getKey().endsWith("SensorStatus")){
-                extMap.put((entry.getKey()+"Time"), String.valueOf(System.currentTimeMillis()));
-            }
-        }
-        if(extMap.size()>0){
-            hiveBot.getDataMap().putAll(extMap);
-        }
-
-        return hiveBot;
-    }*/
 
     public static HiveBot enrichFromJSON(HiveBot hiveBot,
                                          HiveBotData jsonBotData,
@@ -177,44 +122,7 @@ public class BotClientDataMapper {
             hiveBot.setLastHearbeat(new java.util.Date());
         }
 
-        /*int dataMapSize = 0;
-        if(jsonBotData.getDataMap()!=null) {
-            //hiveBot.getProperties().re
-            hiveBot.getDataMap().putAll(jsonBotData.getDataMap());
-            dataMapSize = hiveBot.getDataMap().size();*/
 
-        /* OLD Implemantion for all Event Logging
-
-        if(jsonBotData.getDataMap()!=null) {
-            for (Map.Entry<String, String> entry : jsonBotData.getDataMap().entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                boolean keyFound = false;
-                LOG.warn("\t+"+ jsonBotData.getHiveBotId() + ": DataMap : " + key +":" + value );
-                //System.out.println("JSON MAP" + key + "-" +  value);
-                for (BotData botData : botClient.getDataSet()) {
-                    if (key.equalsIgnoreCase(botData.getDataKey())) {
-                        botData.setDataValue(value);
-                        botData.keepData = keyFound = true;
-                        //System.out.println("DB MAP, Key Exists , Retain" + key + "-" +  value);
-                    }
-                }
-                if (!keyFound) {
-                    //System.out.println("DB MAP, New Key  Value  " + key + "-" +  value);
-                    BotData newBotData = new BotData(key, value);
-                    newBotData.keepData =true;
-                    botClient.getDataSet().add(newBotData);
-                }
-            }
-        }
-
-        botClient.getDataSet().removeIf(
-                (BotData botData) ->{return !botData.keepData;}
-        );
-        */
-
-            //System.out.println("DB MAP, Final DataSet to Insert " + botClient.getDataSet().size());
-        //}
         stringBuffPayload.append(") dataMapSize:" + dataMapSize + " instructionSize:" + instructionSize);
         LOG.info(stringBuffPayload.toString());
         return hiveBot;

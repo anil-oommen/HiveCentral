@@ -60,8 +60,8 @@ public class MQTTOutboundEndpoint {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         logger.info("MQTT Server URL " + mqttUrl);
         factory.setServerURIs(mqttUrl);
-        //factory.setUserName("guest");
-        //factory.setPassword("guest");
+        //factory.setUserName("set");
+        //factory.setPassword("set");
         factory.setConnectionTimeout(5000);
         factory.setKeepAliveInterval(1000);
 

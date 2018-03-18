@@ -15,33 +15,5 @@ public class HiveBotDataType {
     public static String HeartBeat = new String("HeartBeat");
 
 
-/*
 
-    static private HashMap <String,HiveBotDataType> registeredDataType = new HashMap<String,HiveBotDataType>();
-    public  static HiveBotDataType getDataType(String dataTypeStr){
-        return registeredDataType.get(dataTypeStr);
-    }
-
-    private String dataTypeVal  = null;
-    private HiveBotDataType(String dataTypeStr){
-        this.dataTypeVal = dataTypeStr;
-        registeredDataType.put(dataTypeStr, this);
-    }
-    public String getStringValue(){
-        return dataTypeVal;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HiveBotDataType that = (HiveBotDataType) o;
-        return Objects.equals(dataTypeVal, that.dataTypeVal);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(dataTypeVal);
-    }*/
 }

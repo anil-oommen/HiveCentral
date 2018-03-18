@@ -8,7 +8,7 @@ public class DefaultController {
 
     @RequestMapping("/ng")
     public String forwardDefault(){
-        System.err.println("--------------------Executing Forward");
+        System.err.println("-------------------- Executing Forward");
         return "forward:/ng/index.html";
     }
 }

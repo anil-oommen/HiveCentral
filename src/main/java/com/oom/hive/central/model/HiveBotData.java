@@ -27,8 +27,6 @@ public class HiveBotData {
     Long secondsSinceLastBotPulse;
 
 
-/*    long epochTime;*/
-
     String hiveBotId;
 
     public String getHiveBotId() {

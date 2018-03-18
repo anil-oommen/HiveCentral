@@ -15,7 +15,6 @@ public class AppSettings {
 
     public final static String TSTAMP_FORMAT = "dd-MMM HH:mm";
     public final static SimpleDateFormat sDateFormat = new SimpleDateFormat(TSTAMP_FORMAT);
-    //public final static TimeZone TIME_ZONE = TimeZone.getTimeZone("Asia/Singapore");
 
 
 

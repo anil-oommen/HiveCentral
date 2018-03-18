@@ -12,12 +12,6 @@ import java.util.*;
 public class HiveBot {
 
 
-    /*@Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
-    */
-
-    //@Column(unique=true)
     @Id
     public String botId;
     public String botVersion;

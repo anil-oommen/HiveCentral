@@ -50,37 +50,7 @@ public class HiveCentralMain {
 			for (String beanName : beanNames) {
 				//System.out.println(beanName);
 			}
-			//testRepository();
-
-
 		};
 	}
 
-	/*private void testRepository(){
-		System.out.println(">Listing all Clients");
-		for(BotClient bc :clientRepository.findAll()){
-			System.out.println("\t>" + bc.toString());
-		}
-
-		BotClient testClient = new BotClient();
-		testClient.setBotId("TEST.DISCARD");
-		testClient.setStatus("UNKNOWN");
-		testClient.setLastHearbeat(new java.util.Date());
-		testClient.setBotVersion("1.0");
-		testClient.getDataSet().add(new BotData("ONE","ONNUE"));
-		testClient.getDataSet().add(new BotData("TWO","RUNDU"));
-		//testClient.getDataMap().put("ONE",new BotData("ONNU","1"));
-		//testClient.getDataMap().put("TWO",new BotData("RANDU","2"));
-		System.out.println(">Saving Test Client");
-		clientRepository.save(testClient);
-
-		for(BotClient bc :clientRepository.findAll()){
-			System.out.println("\t>" + bc.toString());
-		}
-
-		clientRepository.delete(testClient);
-		for(BotClient bc :clientRepository.findAll()){
-			System.out.println("\t>" + bc.toString());
-		}
-	}*/
 }

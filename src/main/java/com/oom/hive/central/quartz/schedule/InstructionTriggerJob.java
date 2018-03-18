@@ -27,15 +27,6 @@ public class InstructionTriggerJob implements Job {
 
 
 
-   /* @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println("InstructionTriggerJob" + reportingService.getBot("11111"));
-
-    }
-
-    public void setDataToWrite(String dataToWrite) {
-        this.dataToWrite = dataToWrite;
-    }*/
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {

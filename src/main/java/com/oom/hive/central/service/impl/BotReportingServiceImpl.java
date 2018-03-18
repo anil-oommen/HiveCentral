@@ -21,10 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-//import javax.transaction.Transactional;
-
 @Service
-//@Transactional
 public class BotReportingServiceImpl implements BotReportingService{
 
 
@@ -44,22 +41,8 @@ public class BotReportingServiceImpl implements BotReportingService{
                         content);
     }
 
-    //@Transactional
+
     public String register(String botId, String botVersion){
-
-        /*
-        BotClient botClient = hiveBotRepo.findByBotId(botId);
-        if(botClient==null){
-            botClient = new BotClient();
-            botClient.setBotId(botId);
-        }
-
-        botClient.setLastHearbeat(new java.util.Date());
-        botClient.setBotVersion(botVersion);
-        botClient.setStatus("REGISTERED");
-        botClientRepo.save(botClient);
-        */
-
 
         /* Persistentace to MongoDB */
         HiveBot hiveBot = hiveBotRepo.findByBotId(botId);
@@ -76,7 +59,6 @@ public class BotReportingServiceImpl implements BotReportingService{
         return getSaltedHash(botId);
     }
 
-    //@Transactional
     public boolean authenticate(String botId, String botAccesKey){
         HiveBot hiveBot = hiveBotRepo.findByBotId(botId);
         //System.out.println(getSaltedHash(botId));
@@ -85,13 +67,10 @@ public class BotReportingServiceImpl implements BotReportingService{
                 && getSaltedHash(botId).startsWith(botAccesKey));
     }
 
-    //@Transactional
     public HiveBot getBot(String botId){
         return hiveBotRepo.findByBotId(botId);
         //return botClientRepo.findByBotId(botId);
     }
-
-    //@Transactional
 
     public HiveBot markInstructionCompleted(HiveBotData botData,
                                             long instrId,
@@ -175,48 +154,11 @@ public class BotReportingServiceImpl implements BotReportingService{
             }
         }
 
-        //scheduleNewInstructionRecieved(botData,saveOperations);
-
         return hiveBot;
     }
 
 
-
-
-
-    /*@Override
-    @Transactional
-    public void heartbeat(String botId, String botVersion, String status) {
-        BotClient botClient = botClientRepo.findByBotId(botId);
-        if(botClient==null){
-            botClient  = new BotClient();
-            botClient.setBotId(botId);
-        }
-        botClient.setBotVersion(botVersion);
-        botClient.setLastHearbeat(new java.util.Date());
-        botClient.setStatus(status);
-        botClientRepo.save(botClient);
-    }*/
-
-    /*@Override
-    public void storeCurrentState(String botId) {
-
-    }
-
     @Override
-    public String retrieveLastState(String botId) {
-        return  "";
-    }*/
-
-
-    /*@Override
-    @Transactional
-    public Iterable<BotClient> listAllBotClients(){
-        return  botClientRepo.findAll();
-    }*/
-
-    @Override
-    //@Transactional
     public Iterable<HiveBot> listAllHiveBots(){
         return  hiveBotRepo.findAll();
     }

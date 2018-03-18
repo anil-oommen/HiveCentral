@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 public interface HiveBotEventsRepository extends MongoRepository<HiveBotEvent, Long> {
 
-    //@Query(value="{$and: [ {botId: ?0 }, {key: ?1}] }")
     @Query(value="{$and: [ " +
             "  {botId: ?0 }, " +
             "  {key: {$in:?1} },  " +

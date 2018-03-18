@@ -24,21 +24,6 @@ public class MQTTInboundHandler implements MessageHandler {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MQTTInboundHandler.class);
 
-    /* Sample
-    *  http://localhost:8080/hivemq-mqtt-web-client/index.html
-    *   hivecentral/iot/exchange/client
-    *----------------------
-        {
-          "accessKey": "3cfe3256ba8b7a54b464370c68f59b6352d9907979bb8ab037e5da9f0ff7a23d",
-          "dataMap": {
-             "source":"JSONMQTTTEST"
-           },
-          "hiveBotId": "OOMM.HIVE MICLIM.01"
-        }
-    *----------------------
-    *
-    */
-
     @Autowired
     BotReportingService reportingService;
 
@@ -68,11 +53,6 @@ public class MQTTInboundHandler implements MessageHandler {
                 logger.error("MQTT JSON ParseError ", e);
                 return;
             }
-            //botData.getHiveBotId();
-
-            //HiveBotData responseBotData = new HiveBotData();
-            //responseBotData.setHiveBotId(botData.getHiveBotId());
-            //responseBotData.setHiveBotVersion(botData.getHiveBotVersion());
 
             try {
                 //Authenticate Bot

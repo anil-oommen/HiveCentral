@@ -80,22 +80,6 @@ public class InstructionScheduler {
 
         if(saveOperations.contains(AppSettings.HiveSaveOperation.SET_INSTRUCTIONS)){
             _removeAllScheduledJobs(jsonBotData);
-            /*try {
-                logger.info("           -Scanning Existing Schedule to Delete/Deactivate(SET ) :   ");
-                scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey-> {
-                        if(instructionService.isMatchingBot(jobKey,jsonBotData.getHiveBotId())){
-                            logger.info("           --Found a Matching Schedule (" + jobKey.getName()+ "). Deleting ");
-                            try {
-                                scheduler.deleteJob(jobKey);
-                            } catch (SchedulerException e) {
-                                logger.error("           --Error Deleting Old Scheduler ",e);
-                            }
-                        }
-                });
-            } catch (SchedulerException e) {
-                logger.error("           -Error Scanning for Old Jobs of HiveBot to delete ");
-                e.printStackTrace();
-            }*/
         }
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -115,12 +99,6 @@ public class InstructionScheduler {
                         }
                     }
                 });
-                /*JobDetail existingJobDetail = scheduler.getJobDetail(jsModel.getJobDetail().getKey());
-                logger.info("           --Check JobKey already Exists :  Found:(" + ((existingJobDetail!=null)?existingJobDetail.getKey().getName():"Not Found") + ") ");
-                if(existingJobDetail!=null){
-                    scheduler.deleteJob(jsModel.getJobDetail().getKey());
-                    logger.info("           --Old Job Deleted:" );
-                }*/
 
                 scheduler.scheduleJob(jsModel.getJobDetail(), jsModel.getTrigger());
             } catch (SchedulerException e) {
@@ -161,18 +139,6 @@ public class InstructionScheduler {
                     hiveBot.getBotId() + " ");
 
         });
-
-
-        /*List<JobScheduleModel> jobScheduleModels = jobSchedulerModelGenerator.generateModels();
-        for (JobScheduleModel model : jobScheduleModels) {
-            try {
-                scheduler.scheduleJob(model.getJobDetail(), model.getTrigger());
-            } catch (SchedulerException e) {
-                // log the error
-            }
-        }*/
-
-
 
 
     }
@@ -251,31 +217,6 @@ public class InstructionScheduler {
                     logger.error("           --Error Gathering all Job & Trigger Details :  " , e);
                 }
             });
-
-
-            // All scheduled jobs
-            /*for (String groupName : scheduler.getJobGroupNames()) {
-                for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
-                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                    final List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-                    Date nextFireTime = null;
-                    int priority = 5;
-                    if (triggers.size() > 0)
-                    {
-                        nextFireTime = triggers.get(0).getNextFireTime();
-                        priority = triggers.get(0).getPriority();
-                    }
-                    InstructionJobSchedule insJob = new InstructionJobSchedule();
-                    insJob.setKey(jobKey.getName());
-                    insJob.setGroup(jobKey.getGroup());
-                    insJob.setNextFireTime(nextFireTime);
-                    insJob.setPriority(priority);
-                    insJob.setPaused((isJobPaused(jobKey)));
-                    insJob.setTriggerSize(triggers.size());
-                   *//* sb.append("Name= "+ jobKey.getName() + " Group=" + jobKey.getGroup() + " NextFireTime=" + nextFireTime + " Priority=" + priority + " Paused=" +
-                            (isJobPaused(jobKey.getName())?"IS PAUSED":"NOT PAUSED") + " Triggers #=" + triggers.size() + "\r\n\r\n");*//*
-                }
-            }*/
 
             Collections.sort(instructionJobSchedules,insrJobComparator);
         } catch (SchedulerException e) {

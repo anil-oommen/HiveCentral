@@ -16,47 +16,6 @@ import java.util.Arrays;
 @Component
 public class JsonLogHelper {
 
-    /*HttpMessageConverter mappingJackson2HttpMessageConverter;
-    public JsonLogHelper(){
-
-    }
-
-    protected String json(Object o) throws IOException {
-
-        HttpOutputMessage
-
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, );
-        return mockHttpOutputMessage.getBodyAsString();
-    }
-
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
-                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-                .findAny()
-                .orElse(null);
-
-    }*/
-
-
-    /*public String toJSONString(Object o){
-        HttpOutputMessage httpHttpOutputMessage = new HttpOutputMessage();
-        this.jsonConverter().write(
-                o, MediaType.APPLICATION_JSON, );
-        return mockHttpOutputMessage.getBodyAsString();
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter jsonConverter() {
-        MappingJackson2HttpMessageConverter jacksonConverter = new
-                MappingJackson2HttpMessageConverter();
-        jacksonConverter.setSupportedMediaTypes(Arrays.asList(MediaType.valueOf("application/json")));
-        jacksonConverter.setObjectMapper(jacksonObjectMapper());
-        return jacksonConverter;
-    }*/
 
     public String toJSONString(Object o)  {
         String beutifulJson = null;

@@ -50,38 +50,4 @@ public class DataModeToServiceModel {
         return hiveBotData;
     }
 
-    /*@Deprecated
-    public static HiveBotData enrichInstructionsToExecute(HiveBot hiveBot ,HiveBotData hiveBotData){
-        hiveBot.getInstructions()
-                .forEach(
-                        instr-> {
-                            if(instr.isExecute()) {
-                                hiveBotData.getInstructions()
-                                        .add(new Instruction(
-                                                instr.getInstrId(),
-                                                instr.getCommand(),
-                                                instr.getSchedule(),
-                                                instr.getParams(), instr.isExecute()
-                                        ));
-                            }
-                        }
-                );
-        return hiveBotData;
-    }*/
-
-
-
-    /*public static HiveBotData enrichExecuteInstructions(HiveBot hiveBot , HiveBotData hiveBotData, HiveBotInstruction hiveBotInstruction){
-        hiveBotData.getInstructions()
-                .add(new Instruction(
-                        hiveBotInstruction.getInstrId(),
-                        hiveBotInstruction.getCommand(),
-                        hiveBotInstruction.getSchedule(),
-                        hiveBotInstruction.getParams(),
-                        hiveBotInstruction.isExecute()
-                ));
-        return hiveBotData;
-    }*/
-
-
 }

@@ -26,6 +26,6 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/hivewebsocket")    // The Service EndPoint
-                .enableSimpleBroker(WEBSOCK_DESTINATION_TOPIC_BASE);  //Messaging Base Topic
+                .enableSimpleBroker(WEBSOCK_DESTINATION_TOPIC_BASE);   //Messaging Base Topic
     }
 }

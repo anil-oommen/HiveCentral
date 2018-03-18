@@ -17,8 +17,7 @@ public class AopInterceptConfiguration {
 
 
     @Pointcut("execution(* com.oom.hive.central.controller.*.*(..))" )
-    public void controllerMonitor() {
-    }
+    public void controllerMonitor() {}
 
     @Bean
     public PerformanceMonitorInterceptor performanceMonitorInterceptor() {
