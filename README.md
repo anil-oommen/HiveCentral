@@ -3,11 +3,11 @@ Web Application & Controller for the **HiveBot** IOT Devices.
 
 ## Technology Stack
  - Framework & Libraries
- - Spring Boot (1.5.6)
- - Mongo DB
- - Angular 5.x
- - MQTT
- - Quartz Scheduler (2.2.1)
+	 - Spring Boot (1.5.6)
+	 - Mongo DB
+	 - Angular 5.x
+	 - MQTT
+	 - Quartz Scheduler (2.2.1)
  - IDE & tools
 	 - Angular CLI (1.6.x)
 	 -
