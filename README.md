@@ -38,3 +38,34 @@ Angular CLI for Running Development container
 Maven Check Active Profile
 ----------
     mvn help:active-profiles
+
+Maven Setting up Local Workspace in Windows
+
+Setting up Servers in ***settings.xml***
+```
+<server>
+  <id>DISTROSERVER</id>
+  <username></username>   <password></password>   <filePermissions>664</filePermissions>
+  <directoryPermissions>775</directoryPermissions>   <configuration></configuration>
+</server>
+<server>
+  <id>DISTROSERVER</id>
+  <username></username>   <password></password>   <filePermissions>664</filePermissions>
+  <directoryPermissions>775</directoryPermissions>   <configuration></configuration>
+</server>
+```
+
+```
+<profile>
+    <id>windows10.local</id>
+    <activation> <!-- activate if Windows Machine -->
+    <os>
+        <family>Windows</family>
+    </os>
+    </activation>
+    <properties>
+        <profile.distroserver.url>scp://192.168.1.xxx//PathToRepository</profile.distroserver.url>
+        <profile.deployserver.url>scp://192.168.1.xxx//PathToDeploymentArea</profile.deployserver.url>
+    </properties>
+</profile>
+```
