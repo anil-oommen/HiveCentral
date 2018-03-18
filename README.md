@@ -12,8 +12,9 @@ Web Application & Controller for the **HiveBot** IOT Devices.
 	 - Angular CLI (1.6.x)
 	 -
 
-----------
+
 Building Maven Project
+----------
     mvn clean compile spring-boot:run
 
 ----------
