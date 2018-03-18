@@ -1,0 +1,16 @@
+<span> {{message}}</span>
+
+<button mat-icon-button  *ngIf="(showSuccessBtn)"
+style="align-content: right"
+(click)="close()" 
+color="accent">
+<mat-icon aria-label="Acknowledge">done</mat-icon>
+</button>
+
+
+<button mat-icon-button  *ngIf="(showErrorBtn)"
+style="align-content: right"
+(click)="close()" 
+color="accent">
+<mat-icon aria-label="Error Outline">error_outline</mat-icon>
+</button>

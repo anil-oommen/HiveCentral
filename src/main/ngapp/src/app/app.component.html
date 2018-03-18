@@ -1,0 +1,27 @@
+<div>
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span>HiveCentral Web Console</span>
+    
+    <span style="font-size: 0.6em;">&nbsp;&nbsp; [ {{getAppEnv()}} ] </span>
+  </mat-toolbar>
+
+  
+  <!--  router-outlet >< / router-outlet > -->
+
+<mat-tab-group class="hiveui-tab-group">
+  <mat-tab label="MClimate BOT">
+      <app-mclimate-main></app-mclimate-main>
+  </mat-tab>
+  <mat-tab label="Dashboard">
+      <app-dashboard-page></app-dashboard-page>
+  </mat-tab>
+  <mat-tab label="Settings">
+    <app-settings-page></app-settings-page>
+      </mat-tab>
+  <mat-tab label="About::">
+    <app-about-page></app-about-page>
+    </mat-tab>
+</mat-tab-group>
+<app-alert-notify></app-alert-notify>
+</div>
+

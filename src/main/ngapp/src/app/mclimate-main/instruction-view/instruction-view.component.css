@@ -1,0 +1,35 @@
+.hivedash-card {
+    width: 95%;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.hivedash-card-header-image {
+    background-image: url('https://material.angularjs.org/latest/img/washedout.png');
+    background-size: cover;
+  }
+
+.hive-table-container {
+    display: flex;
+    flex-direction: column;
+    max-height-disable: 500px;
+    min-width-disable: 300px;
+}
+  
+.mat-table {
+    overflow: auto;
+    max-height: 500px;
+}
+
+.function-checkbox-section {
+    margin-top: 100px;
+    margin-left: 10px;
+    align-content: center;
+    align-items: center;
+}
+
+.function-checkbox {
+    margin-left: 10px;
+    /* display: block; */
+}
+

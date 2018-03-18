@@ -1,0 +1,60 @@
+<mat-card class="hivedash-card">
+
+      <mat-card-content>
+
+          <table>
+              <tbody>
+                <tr><td>
+                    <mat-form-field>
+                        <mat-select placeholder="Bot Instructions" 
+                        [(ngModel)]="sFormModel.selectInstruction" required>
+                          <mat-option *ngFor="let instr of sFormModel.availInstructions"
+                           [value]="instr.value">
+                            {{ instr.viewValue }}
+                          </mat-option>
+                        </mat-select>
+                        
+                       </mat-form-field>
+                       <mat-error *ngIf="!(sFormModel.availInstructions.length > 0)">
+                        Instruction <strong>required</strong>
+                      </mat-error>
+                    <mat-form-field >
+                        <mat-select placeholder="Schedule" 
+                        [(ngModel)]="sFormModel.selectSchedule" required>
+                          <mat-option *ngFor="let isched of sFormModel.availSchedules" 
+                          [value]="isched.value">
+                            {{ isched.viewValue }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </td></tr> 
+                <tr><td>
+                    <mat-radio-group class="custom-radio-group" [(ngModel)]="sFormModel.selectOptAction">
+                        <mat-radio-button 
+                        class="custom-radio-button" 
+                        *ngFor="let instrAction of sFormModel.availOptActions" 
+                        [value]="instrAction.value"
+                        [checked] = "instrAction.defaultSelected"
+                        >
+                          {{instrAction.label}} &nbsp;&nbsp;&nbsp;
+                        </mat-radio-button>
+                      </mat-radio-group>
+                      
+                </td></tr>
+              </tbody>
+            </table>
+            
+      </mat-card-content>
+
+
+      <mat-card-actions>
+          <button mat-raised-button (click)="hiveCentralSendInstructions()" color="accent" >send
+          <mat-icon aria-label="Send Instructions">input</mat-icon></button>
+          <button mat-raised-button  color="primary">refresh
+            <mat-icon aria-label="Refresh Hive Data">update</mat-icon>
+          </button>
+          <button mat-icon-button  color="primary">
+            <mat-icon aria-label="Refresh Hive Data" >update</mat-icon>
+          </button>
+        </mat-card-actions>
+</mat-card>

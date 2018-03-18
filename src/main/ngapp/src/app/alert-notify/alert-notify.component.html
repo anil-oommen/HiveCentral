@@ -1,0 +1,17 @@
+
+<div class="alert-placement">
+    <div *ngFor="let alert of alerts" class="{{ cssClass(alert) }} alert-dismissable">
+        {{alert.message}} 
+        <a class="close" (click)="removeAlert(alert)">&times;</a>
+    </div>
+</div>
+
+
+
+<div [class.loader-hidden]="!showLoader">
+    <div class="loader-overlay">
+            <div>
+                <mat-progress-spinner mode="indeterminate" *ngIf="showLoader"></mat-progress-spinner>
+            </div>
+    </div>
+</div>

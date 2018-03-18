@@ -1,0 +1,11 @@
+.hivedash-card {
+    width: 95%;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.hivedash-card-header-image {
+    background-image: url('https://material.angularjs.org/latest/img/washedout.png');
+    background-size: cover;
+  }
+
