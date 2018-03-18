@@ -1,9 +1,10 @@
 # HiveCentral
 Web Application & Controller for the **HiveBot** IOT Devices.
+![FirstImage](docs/app.droid.image1.jpg)
 
 ## Technology Stack
  - Framework & Libraries
-	 - Spring Boot (1.5.6)
+	 - Spring Boot & Integration
 	 - Mongo DB (Persistence NoSQL)
 	 - Angular 5.x
 	 - [mosquitto](https://mosquitto.org/) MQTT Broker
@@ -35,13 +36,10 @@ Angular CLI for Running Development container
     cd src\main\ngapp
     ng serve --host 192.168.1.100
 
-Maven Check Active Profile
-----------
-    mvn help:active-profiles
+## Addtional Setup for Local Maven for Distro + Deployment
+Changes to be made for ***.m2/settings.xml***
 
-Maven Setting up Local Workspace in Windows
 
-Setting up Servers in ***settings.xml***
 ```
 <server>
   <id>DISTROSERVER</id>
@@ -49,9 +47,8 @@ Setting up Servers in ***settings.xml***
   <directoryPermissions>775</directoryPermissions>   <configuration></configuration>
 </server>
 <server>
-  <id>DISTROSERVER</id>
-  <username></username>   <password></password>   <filePermissions>664</filePermissions>
-  <directoryPermissions>775</directoryPermissions>   <configuration></configuration>
+  <id>DEPLOYSERVER</id>
+  ....
 </server>
 ```
 
@@ -69,3 +66,7 @@ Setting up Servers in ***settings.xml***
     </properties>
 </profile>
 ```
+
+Maven Check Active Profile
+----------
+    mvn help:active-profiles
