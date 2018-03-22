@@ -17,7 +17,7 @@ import java.util.Arrays;
 @EntityScan()
 @PropertySources({
 	@PropertySource("classpath:application.properties"),
-	@PropertySource("classpath:application.private.properties"),
+	@PropertySource(value = "classpath:application.private.properties",ignoreResourceNotFound = true),
 	@PropertySource("classpath:build.properties")
 })
 public class HiveCentralMain {
