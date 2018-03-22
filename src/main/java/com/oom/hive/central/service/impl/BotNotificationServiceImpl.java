@@ -12,6 +12,7 @@ import com.oom.hive.central.service.BotNotificationService;
 import com.oom.hive.central.utils.JsonLogHelper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
