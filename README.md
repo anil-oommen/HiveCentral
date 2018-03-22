@@ -86,12 +86,11 @@ Maven Check Active Profile
     
 Spring Profiles for Application. 
 ----------
-Set ***SPRING_PROFILES_ACTIVE*** OS Env Variable. Multiple values(comma, separated) can be used.
+Set OS Environment ***SPRING_PROFILES_ACTIVE*** to change default behaviour. 
+Multiple values(comma, separated) can be used.
     
-    'Development' | Bare minimum
-    'ModuleNEACollect' | NEA Data Collection Module
-    'ModuleMQTT' | MQTT Connectivity 
-    'Production' | Nothing Special
+    'ModuleNEACollect' | Enable NEA Data Collection Module
+    'ModuleMQTT' | Enable MQTT Connectivity 
 
 Registering HiveBots  
 ----------

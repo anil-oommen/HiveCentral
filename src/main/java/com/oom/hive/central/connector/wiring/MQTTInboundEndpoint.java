@@ -21,7 +21,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Component
-@Profile({"ModuleMQTT","Production"})
+@Profile({"ModuleMQTT"})
 public class MQTTInboundEndpoint {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MQTTInboundEndpoint.class);

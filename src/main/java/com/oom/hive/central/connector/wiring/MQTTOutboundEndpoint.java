@@ -23,7 +23,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Component
-@Profile({"ModuleMQTT","Production"})
+@Profile({"ModuleMQTT"})
 public class MQTTOutboundEndpoint {
 
 

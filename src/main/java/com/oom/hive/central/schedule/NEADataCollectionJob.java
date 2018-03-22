@@ -30,7 +30,7 @@ import java.util.Map;
 
 @Configuration
 @EnableScheduling
-@Profile({"ModuleNEACollect","Production"})
+@Profile({"ModuleNEACollect"})
 public class NEADataCollectionJob {
 
 

@@ -1,16 +1,9 @@
-package com.oom.hive.central.service.impl;
+package com.oom.hive.central.service.impl.alt;
 
-import com.oom.hive.central.connector.MQTTOutboundGateway;
-import com.oom.hive.central.mappers.DataModeToServiceModel;
-import com.oom.hive.central.model.HiveBotData;
-import com.oom.hive.central.model.Instruction;
-import com.oom.hive.central.model.types.HiveBotDataType;
 import com.oom.hive.central.repository.model.HiveBot;
 import com.oom.hive.central.repository.model.HiveBotInstruction;
 import com.oom.hive.central.service.BotNotificationService;
-import com.oom.hive.central.utils.JsonLogHelper;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
