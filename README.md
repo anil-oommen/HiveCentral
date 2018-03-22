@@ -91,4 +91,44 @@ Set SPRING_PROFILES_ACTIVE OS Env Variable. Multiple values(comma, separated) ca
     'ModuleMQTT' | MQTT Connectivity 
     'Production' | Nothing Special
 
+Registering HiveBots  
+----------
+Use the ***/swagger-ui.html*** for Registration & Setting up the HiveBots.
+Below sample is for setting up a MicroClimate HiveBot 
     
+Register a new HiveBot (Controller : ***/hivecentral/{bottype}/register***)
+```
+	bottype = hivebot
+	Payload =  {   
+		"hiveBotId": "DEMO.HIVE MICLIM.01",   
+		"hiveBotVersion": "1.0" 
+	}
+	Returns = "accessKey": "7c85a75e121be..........."
+```
+
+Initialize & Setup with Default Values for Demo (Controller : ***/hivecentral/{bottype}/xchange/{action}***)
+```
+	bottype = hivebot
+	action = save_set_datamap
+	Payload  = {
+	"accessKey": "7c85a75e121be...........",
+	"hiveBotId": "DEMO.HIVE MICLIM.01",
+	"enabledFunctions" : ".+DHT22+DEEPSLEEP",
+	"dataMap" : {
+		"Temperature" : "30.80",
+		"HumidityPercent" : "57.30",
+		"DHT22_SensorStatus" : "OK",
+		"DHT22_SensorStatusTime" : "1519568359293",
+		"AcPower" : "ON",
+		"AcTemp" : "24",
+		"AcMode" : "3",
+		"AcFan" : "4",
+		"AcProfileId" : "3"
+	}
+```
+
+
+Setting up for OpenShift Deployment   
+----------
+Using RedHat Java S2I Image and MongoDB.
+...work in Progress. 
