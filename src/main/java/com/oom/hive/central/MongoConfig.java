@@ -14,19 +14,19 @@ import java.io.IOException;
 @Configuration
 public class MongoConfig {
 
-    @Value( "${mongodb.hostname}" )
+    @Value( "${app.mongodb.hostname}" )
     String hostname;
 
-    @Value( "${mongodb.port}" )
+    @Value( "${app.mongodb.port}" )
     int port;
 
-    @Value( "${mongodb.database}" )
+    @Value( "${app.mongodb.database}" )
     String database;
 
-    @Value( "${mongodb.username}" )
+    @Value( "${app.mongodb.username}" )
     String username;
 
-    @Value( "${mongodb.password}" )
+    @Value( "${app.mongodb.password}" )
     String password;
 
     @Bean
