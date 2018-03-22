@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile({"ModuleMQTT"})
 public class BotNotificationServiceImpl implements BotNotificationService{
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BotNotificationServiceImpl.class);

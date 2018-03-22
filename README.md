@@ -81,3 +81,14 @@ Changes to be made for ***.m2/settings.xml***
 Maven Check Active Profile
 ----------
     mvn help:active-profiles
+    
+Spring Profiles for Application. 
+----------
+Set SPRING_PROFILES_ACTIVE OS Env Variable. Multiple values(comma, separated) can be used.
+    
+    'Development' | Bare minimum
+    'ModuleNEACollect' | NEA Data Collection Module
+    'ModuleMQTT' | MQTT Connectivity 
+    'Production' | Nothing Special
+
+    
