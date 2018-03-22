@@ -1,6 +1,8 @@
 # HiveCentral
 Web Application & Controller for the **HiveBot** IOT Devices. The controllers has services to register and maintain life cycle and the status of the IOT Bots. All IOT devices refered as **HiveBot**  have to connect via common MQTT bridge and follow the custom protocol and JSON format for data exchange.
 
+[DEMO ](http://hcentral-hive.193b.starter-ca-central-1.openshiftapps.com/ng/) hosted on OpenShift
+
 ## Features
   - REST API for Registering new HiveBots , view DataMap and Instructions.
   - REST API for sending Instructions to HiveBots
@@ -84,7 +86,7 @@ Maven Check Active Profile
     
 Spring Profiles for Application. 
 ----------
-Set SPRING_PROFILES_ACTIVE OS Env Variable. Multiple values(comma, separated) can be used.
+Set ***SPRING_PROFILES_ACTIVE*** OS Env Variable. Multiple values(comma, separated) can be used.
     
     'Development' | Bare minimum
     'ModuleNEACollect' | NEA Data Collection Module
