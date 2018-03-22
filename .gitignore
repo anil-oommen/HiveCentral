@@ -5,7 +5,7 @@
 *.p12
 .idea
 target
-src/main/webapp/static/ng/
+src/main/webapp/static/ng_disabled/
 src/main/ngapp/node_modules/
 
 

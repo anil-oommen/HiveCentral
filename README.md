@@ -9,7 +9,7 @@ Web Application & Controller for the **HiveBot** IOT Devices. The controllers ha
   - Charting for sensor data using ChartJS
   - Support for AirCon registered profiles used by HiveBots to send IR signals.
   - Scheduling instructions for HiveBots with features to pull all instruction backlogs after DeepSleep or Cold Restarts.
-  - Progress Web App ( Under Development) 
+  - Progress Web App ( Under Development)
 
 ![Integration Image](docs/app.integration.full.png)
 
