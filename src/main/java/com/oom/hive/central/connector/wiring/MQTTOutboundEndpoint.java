@@ -3,6 +3,7 @@ package com.oom.hive.central.connector.wiring;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oom.hive.central.model.HiveBotData;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,13 @@ public class MQTTOutboundEndpoint {
     @Value( "${mqtt.url}" )
     private String mqttUrl;
 
+    @Value( "${mqtt.user}" )
+    private String mqttUser;
+
+    @Value( "${mqtt.password}" )
+    private String mqttPassword;
+
+
     @Value( "${mqtt.clientid.prefix}" )
     private String mqttClientPrefix;
 
@@ -60,8 +68,13 @@ public class MQTTOutboundEndpoint {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         logger.info("MQTT Server URL " + mqttUrl);
         factory.setServerURIs(mqttUrl);
-        //factory.setUserName("set");
-        //factory.setPassword("set");
+        if(StringUtils.isEmpty(mqttUser)){
+            logger.warn("MQTT No UserName/Password set. Will connect without any");
+        }else{
+            logger.warn("MQTT Connecting with UserName:" + mqttUser +" Passsword:XXXXX");
+            factory.setUserName(mqttUser);
+            factory.setPassword(mqttPassword);
+        }
         factory.setConnectionTimeout(5000);
         factory.setKeepAliveInterval(1000);
 
