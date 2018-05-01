@@ -97,19 +97,19 @@ Registering HiveBots
 Use the ***/swagger-ui.html*** for Registration & Setting up the HiveBots.
 Below sample is for setting up a MicroClimate HiveBot 
     
-Register a new HiveBot (Controller : ***/hivecentral/{bottype}/register***)
+Register a new HiveBot (Controller : ***/api/hivecentral/secure/register.new***)
+Secure Access Required, Use Login Feature in NgApp to login as 'guest'
 ```
-	bottype = hivebot
-	Payload =  {   
+	Payload =  {
 		"hiveBotId": "DEMO.HIVE MICLIM.01",   
 		"hiveBotVersion": "1.0" 
 	}
 	Returns = "accessKey": "7c85a75e121be..........."
 ```
 
-Initialize & Setup with Default Values for Demo (Controller : ***/hivecentral/{bottype}/xchange/{action}***)
+Initialize & Setup with Default Values for Demo (Controller : ***/api/hivecentral/secure/save.{options}***)
+Secure Access Required, Use Login Feature in NgApp to login as 'guest'
 ```
-	bottype = hivebot
 	action = save_set_datamap
 	Payload  = {
 	"accessKey": "7c85a75e121be...........",
