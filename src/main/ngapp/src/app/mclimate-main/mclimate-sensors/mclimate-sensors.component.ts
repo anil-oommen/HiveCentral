@@ -88,7 +88,7 @@ export class MclimateSensorsComponent implements OnInit {
     hiveInstr.command=launchCommand;
     hiveInstr.params=''
     hiveInstr.schedule="runonce.now:";
-    this.hiveService.sendInstructions(hiveInstr,true);
+    this.hiveService.sendInstructionsSecure(hiveInstr,true);
     this.botAcProfileIdPendingChange=selectedBotAcProfileId;
   }
 

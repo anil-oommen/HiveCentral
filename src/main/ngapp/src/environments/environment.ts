@@ -5,11 +5,19 @@
 
 export const environment = {
   production: false,
-  appEnvVersion: 'ng Dev v0.5',
-  hiveAllScheduled : 'http://192.168.1.103:8080/hivecentral/all.scheduled',
-  hiveRemoveScheduled : 'http://192.168.1.103:8080/hivecentral/remove.scheduled',
-  mclientBaseURL : 'http://192.168.1.103:8080/hivecentral/iot.bot/xchange/',
-  mclientChartBaseURL : 'http://192.168.1.103:8080/sensorchart/',
+  appEnvVersion: 'ng Dev v1.6',
+  
+  hiveAllScheduled : 'http://192.168.1.103:8080/api/instrschedule/public/list.all',
+  hiveRemoveScheduled : 'http://192.168.1.103:8080/api/instrschedule/secure/remove',
+
+  mclientGetInfo : 'http://192.168.1.103:8080/api/hivecentral/public/get.info',
+  mclientSaveSettings : 'http://192.168.1.103:8080/api/hivecentral/secure/save.func.',
+  mclientChartBaseURL : 'http://192.168.1.103:8080/api/sensorchart/public/temp_humidity',
+
+  mclientApiLoginEndpoint : 'http://192.168.1.103:8080/app/security/login',
+  mclientApiLogoutEndpoint : 'http://192.168.1.103:8080/app/security/logout',
+  mclientApiCheckSecureAccess : 'http://192.168.1.103:8080/api/session/secure/check.access',
+
   mclimateBotId : 'OOMM.HIVE MICLIM.02',
   mclimateBotAccessKey : 'b293c9a090'
 };

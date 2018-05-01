@@ -29,6 +29,7 @@ class SchedFormModel{
     return true;
   }
 
+  
   selectInstruction = "";
   availInstructions = [
     {value:'LEDDANCE' , viewValue:'Demo LED Bly2nk'},
@@ -121,6 +122,8 @@ export class SchedulerCardComponent implements OnInit {
   sFormModel  = new SchedFormModel();
   private snackBarRef: any;
 
+  displayUserSessionActive = 0;
+
   showSnackbarREMOVE(snackMessage:string){
     let config = new MatSnackBarConfig();
     config.duration = 5000;
@@ -135,21 +138,34 @@ export class SchedulerCardComponent implements OnInit {
 
 
   ngOnInit() {
+    this.hiveService.appUser.geObservable().subscribe(
+      (sessionisActive:boolean)=>{
+        console.log(`SubscribedEvent : Got Notification SessionActive: ${sessionisActive}`)
+        this.displayUserSessionActive=sessionisActive?1:0;
+      })
   }
 
 
+  sessionLogin(){
+    this.displayUserSessionActive=-1;
+    this.hiveService.loginForSecureAccess('guest','pass123');
+  }
+
+  sessionLogout(){
+    this.displayUserSessionActive=-1;
+    this.hiveService.logoutFromSecureAccess();
+  }
+
+  debugCheckHasSecureAccess(){
+    this.hiveService.checkHasSecureAccess();
+  }
 
   hiveCentralSendInstructions(){
 
     if(!this.sFormModel.doValidate()){
-      //this.showMessage("Instruction Incomplete.");
       this.alertService.showSnackbar("Form incomplete",true);
-      //this.hiveService.sendSocketMessage();
       return ;
     }
-    //let hiveData = new HiveBotData();
-    //hiveData.accessKey='3cfe3256ba1';
-    //hiveData.hiveBotId='OOMM.HIVE MICLIM.01';
 
     let randonNum = Math.floor(Math.random() * 9999) + 10000  ;
 
@@ -164,34 +180,6 @@ export class SchedulerCardComponent implements OnInit {
     if(this.sFormModel.selectOptAction == "addOnly"){
       addOnlyInst = true;
     }
-    this.hiveService.sendInstructions(hiveInstr,addOnlyInst);
-/*
-    hiveData.instructions = [hiveInstr];
-    this.alertService.showLoading();
-    console.log(JSON.stringify(hiveData));
-
-
-    this.http.post<any>("http://localhost:8080/hivecentral/iot.bot/xchange/save_add_instructions",
-      hiveData
-    ).subscribe(data => {
-      this.alertService.hideLoading();
-      // Read the result field from the JSON response.
-      this.hivebotInstructionResponse = data.timestamp + " > " + data.message;
-      //this.openSnackBar();
-      //this.updateHumidity(data.bots[0].dataMap.HumidityPercent);
-      this.alertService.success(`${data.message} ::  ${data.timestamp} `);
-
-    },
-    (err: HttpErrorResponse) => {
-      this.alertService.hideLoading();
-      if (err.error instanceof Error) {
-        console.error("Client-side error occured.",err.error.message);
-        this.alertService.error(`Error ${err.message}`);
-      } else {
-        console.error(`Server-side error occured ${err.status}, body was: ${err.error} ${err.statusText}`);
-        this.alertService.error(`Error ${err.message}`);
-      }
-    });
-    */
+    this.hiveService.sendInstructionsSecure(hiveInstr,addOnlyInst);
   }
 }

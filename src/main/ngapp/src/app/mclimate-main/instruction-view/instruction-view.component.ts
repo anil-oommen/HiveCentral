@@ -73,9 +73,9 @@ export class InstructionViewComponent implements OnInit {
   
 
   removeInstruction(jobKey:string){
-    console.log("RemoveInstruction2 Recieved." + jobKey);
-    this.hiveService.removeInstruction(jobKey);
-    this.flagSyncToHiveCentralRequired();
+    console.log("Removing Instructions." + jobKey);
+    this.hiveService.removeInstructionSecure(jobKey);
+    //this.flagSyncToHiveCentralRequired();
   }
 
 
@@ -95,9 +95,14 @@ export class InstructionViewComponent implements OnInit {
 
     let enFunctions = this.constructFuctionsFromUX();
     /* Trigger Service Callback */
-    this.hiveService.xhangeFunctions(
-      enFunctions,
-      this.triggerFunctionChangeFromUX);
+    if(this.triggerFunctionChangeFromUX){
+      this.hiveService.saveSettingsSecured(
+        enFunctions,
+        this.triggerFunctionChangeFromUX);
+    }else{
+      this.hiveService.getPublicInfo(enFunctions);
+    }
+    
 
     
 

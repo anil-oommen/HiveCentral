@@ -1,3 +1,20 @@
+import { Observable,Subject }   from 'rxjs';
+
+export class AppSessionUser{
+    isLoggedIn: boolean =false;
+    loggedInUser: string = ''; 
+    private appUserObserveSubject = new Subject<boolean>();
+    reset(){ this.isLoggedIn = false; this.loggedInUser='';this.appUserObserveSubject.next(false);}
+    setUser(u:string){this.loggedInUser=u;this.isLoggedIn=true;this.appUserObserveSubject.next(true);}
+    geObservable(): Observable<any>{
+        return this.appUserObserveSubject.asObservable();
+    }
+}
+
+export class GenericMessage  {
+    statusCode: number;
+    message: string;
+}
 
 export class HiveBotInstruction {
     instrId: number;

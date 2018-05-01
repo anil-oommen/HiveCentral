@@ -9,3 +9,22 @@
     background-size: cover;
   }
 
+
+.disabled-icon {
+    color: rgb(224, 226, 226);
+    outline: none;
+}
+
+.selected-icon {
+    color: rgb(31, 74, 85);
+    outline: none;
+}
+
+.working-icon {
+    color: rgb(31, 74, 85);
+    animation-name: pulseFrames;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    outline: none;
+}

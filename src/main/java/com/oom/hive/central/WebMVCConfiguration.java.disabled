@@ -1,0 +1,31 @@
+package com.oom.hive.central;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.resource.PathResourceResolver;
+
+@EnableWebMvc
+@Configuration
+public class WebMVCConfiguration extends WebMvcConfigurerAdapter {
+
+    /*
+    TODO I need to CORS Mapping which is working , but all static resources stops working.
+    */
+
+    /* Global CrossOrigin Settings allow Everyone to Access All */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("/static/**")
+                .addResourceLocations("/static/")
+                .setCachePeriod(3600)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver())
+        ;
+    }
+}

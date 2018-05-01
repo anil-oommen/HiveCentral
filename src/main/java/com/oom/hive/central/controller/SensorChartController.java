@@ -22,16 +22,16 @@ import java.util.List;
         methods = {RequestMethod.GET, RequestMethod.POST}
 )
 @RestController
-@RequestMapping("/sensorchart")
+@RequestMapping("/api/sensorchart")
 @Api(value="sensorchart", description="Charts from SensorData")
 public class SensorChartController {
 
     @Autowired
     ChartingService chartingService;
 
-    @RequestMapping(value= "/{hiveBotId}/temp_humidity", method = RequestMethod.GET )
+    @RequestMapping(value= "/public/temp_humidity", method = RequestMethod.GET )
     public ResponseEntity<ChartJSData> getTemperatureAndHumidity(
-            @PathVariable(value = "hiveBotId") String hiveBotId,
+            @RequestParam(value="hiveBotId"  ) String hiveBotId,
             @RequestParam(value="flashbackMinutes" , defaultValue = "360" /*60*6 , 6 Hours */) int flashbackMinutes,
             @RequestParam(value="intervalMinutes" , defaultValue = "15" /*Every 15 Minutes */) int intervalMinutes
     ){

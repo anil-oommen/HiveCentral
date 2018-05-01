@@ -26,11 +26,10 @@ import java.util.List;
 
 @CrossOrigin(
         maxAge = 3600 ,
-        allowedHeaders = "*",
-        methods = {RequestMethod.GET, RequestMethod.POST}
+        allowedHeaders = "*"
 )
 @RestController
-@RequestMapping("/hivecentral")
+@RequestMapping("/api/hivecentral")
 @Api(value="hivecentral", description="Gateway for all Bot Communication.")
 public class BotController {
 
@@ -51,7 +50,7 @@ public class BotController {
     @Autowired
     JsonLogHelper jsonLogHelper;
 
-    @RequestMapping(value= "/all.clients", method = RequestMethod.GET )
+    @RequestMapping(value= "/public/all.clients", method = RequestMethod.GET )
     public HiveCentralResponse allClients(){
         HiveCentralResponse rep = new HiveCentralResponse("OK", "List of Clients");
         //rep.setClients(reportingService.listAllBotClients());
@@ -59,29 +58,29 @@ public class BotController {
         return rep;
     }
 
-    @RequestMapping(value= "/all.scheduled", method = RequestMethod.GET )
+    @RequestMapping(value= "/public/all.scheduled", method = RequestMethod.GET )
     public List<InstructionJobSchedule> allScheduledJobs(){
         return instructionScheduler.getScheduledJobs();
     }
 
-    @RequestMapping(value= "/remove.scheduled/{hiveBotId}/{instrjobkey}", method = RequestMethod.GET )
+    /*
+    @RequestMapping(value= "/secure/remove.scheduled/{hiveBotId}/{instrjobkey}", method = RequestMethod.GET )
     public ResponseEntity<String> removeScheduledJob(
             @PathVariable(value = "hiveBotId") String hiveBotId,
             @PathVariable(value = "instrjobkey") String instructionJobKey
-            ){
+    ){
 
         if(instructionScheduler.removeScheduleByKey(hiveBotId,instructionJobKey)){
             return new ResponseEntity<>("OK", HttpStatus.ACCEPTED);
         }else{
             return new ResponseEntity<>("Data Not Found", HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
 
 
-    @RequestMapping(value= "/{bottype}/register", method = RequestMethod.POST )
+    @RequestMapping(value= "/secure/register.new", method = RequestMethod.POST )
     public ResponseEntity<HiveBotData> register(
-            @PathVariable("bottype") String bottype,
             @RequestBody HiveBotData botData)
     {
 
@@ -102,15 +101,140 @@ public class BotController {
     }
 
 
+    @RequestMapping(value= "/public/get.info", method = RequestMethod.POST )
+    public ResponseEntity<HiveBotData> getInfo(
+            HttpServletRequest request,
+            @RequestBody HiveBotData botData
+    ){
+        logger.debug("\r\nJSON::REQUEST:" + request.getRemoteAddr() +" " +
+                request.getRequestURL()+"\r\n" +
+                jsonLogHelper.toJSONString(botData));
 
+        //response placeholder.
+        ResponseEntity<HiveBotData> responseEntity;
+        HiveBotData responseBotData = new HiveBotData();
+        responseBotData.setHiveBotId(botData.getHiveBotId());
+        responseBotData.setHiveBotVersion(botData.getHiveBotVersion());
+
+        try {
+            //Authenticate Bot
+            if (!StringUtils.isEmpty(botData.getHiveBotId())
+                    && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
+                    ) {
+                logger.info("HTTP get_info  >  >  > " +
+                        botData.getHiveBotId() +")"
+
+                );
+                HiveBot hiveBot = reportingService.getBot(botData.getHiveBotId());
+                responseBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
+                responseBotData = DataModeToServiceModel.enrichFunctions(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichFullDataMap(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichFullInstructions(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichAliveInfo(hiveBot,responseBotData);
+
+                responseBotData.setMessage("Hello " + botData.getHiveBotId() + ".Data Retrieve Done");
+                responseBotData.setStatus("ACK");
+                responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.ACCEPTED);
+            } else {
+                logger.warn("HTTP Authentication Failed: " + request.getRequestURI() + " from:" + request.getRemoteHost());
+                logger.warn("HTTP Creds: " + botData.getHiveBotId() +" " +  botData.getAccessKey());
+                responseBotData.setStatus("ERR.UNAUTHORISED");
+                responseEntity =new ResponseEntity<>(responseBotData, HttpStatus.UNAUTHORIZED);
+            }
+        }catch(BotDataParseException bEx){
+            logger.warn("HTTP BadRequest Rejected:" + request.getRequestURI() + " from:" + request.getRemoteHost());
+            responseBotData.setStatus("ERR.BAD_REQUEST");
+            responseBotData.setMessage(bEx.getMessage());
+            responseEntity =  new ResponseEntity<>(responseBotData, HttpStatus.BAD_REQUEST);
+        }
+
+        logger.debug("\r\nJSON::RESPONSE\r\n" + jsonLogHelper.toJSONString(responseEntity.getBody()));
+        return responseEntity;
+    }
+
+
+    @RequestMapping(value= "/secure/save.{options}", method = {RequestMethod.OPTIONS,RequestMethod.POST} )
+    public ResponseEntity<HiveBotData> saveInfo(
+            @PathVariable("options") String saveoptions,
+            @RequestBody HiveBotData botData,
+            HttpServletRequest request
+    )
+    {
+        logger.debug("\r\nJSON::REQUEST:" + request.getRemoteAddr() +" " +
+                request.getRequestURL()+"\r\n" +
+                jsonLogHelper.toJSONString(botData));
+
+        //response placeholder.
+        ResponseEntity<HiveBotData> responseEntity;
+        HiveBotData responseBotData = new HiveBotData();
+        responseBotData.setHiveBotId(botData.getHiveBotId());
+        responseBotData.setHiveBotVersion(botData.getHiveBotVersion());
+
+        try {
+            //Authenticate Bot
+            if (!StringUtils.isEmpty(botData.getHiveBotId())
+                    && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
+                    ) {
+                logger.info("HTTP save.info  >  >  > " +
+                        botData.getHiveBotId() +":operation=(" + AppSettings.hiveOperationsToString(_translateSaveOperations(saveoptions)) +")"
+
+                );
+
+                HiveBot hiveBot = reportingService.saveBot(
+                        botData,_translateSaveOperations(saveoptions)
+                );
+
+                boolean hasSchedule = instructionScheduler
+                        .registerNewInboundInstruction(botData,
+                                _translateSaveOperations(saveoptions));
+
+                responseBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
+                responseBotData = DataModeToServiceModel.enrichFunctions(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichFullDataMap(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichFullInstructions(hiveBot,responseBotData);
+                responseBotData = DataModeToServiceModel.enrichAliveInfo(hiveBot,responseBotData);
+
+
+                responseBotData.setMessage("Hello " +
+                        botData.getHiveBotId() + ". Data Info Saved. " +
+                        (hasSchedule?
+                                " Instructions Scheduled.":"")
+                );
+                notificationService.updateFunctions(hiveBot);
+                responseBotData.setStatus("ACK");
+                responseEntity = new ResponseEntity<>(responseBotData, HttpStatus.ACCEPTED);
+
+
+            } else {
+                logger.warn("HTTP Authentication Failed: " + request.getRequestURI() + " from:" + request.getRemoteHost());
+                logger.warn("HTTP Creds: " + botData.getHiveBotId() +" " +  botData.getAccessKey());
+                responseBotData.setStatus("ERR.UNAUTHORISED");
+                responseEntity =new ResponseEntity<>(responseBotData, HttpStatus.UNAUTHORIZED);
+            }
+        }catch(BotDataParseException bEx){
+            logger.warn("HTTP BadRequest Rejected:" + request.getRequestURI() + " from:" + request.getRemoteHost());
+            responseBotData.setStatus("ERR.BAD_REQUEST");
+            responseBotData.setMessage(bEx.getMessage());
+            responseEntity =  new ResponseEntity<>(responseBotData, HttpStatus.BAD_REQUEST);
+        }
+
+        logger.debug("\r\nJSON::RESPONSE\r\n" + jsonLogHelper.toJSONString(responseEntity.getBody()));
+        return responseEntity;
+    }
+
+
+
+
+    /*
     @RequestMapping(value= "/{bottype}/xchange/{action}", method = RequestMethod.POST )
+    @Deprecated
     public ResponseEntity<HiveBotData> xchange(
             @PathVariable("bottype") String bottype,
             @PathVariable("action") String action,
             /* for action='EXECUTED'
             @RequestParam(value = "exe.instruction.command", required = false) String instruction_command,
             @RequestParam(value = "exe.instruction.id", required = false) String instruction_id1,
-            @RequestParam(value = "exe.instruction.result", required=false) String instruction_result, */
+            @RequestParam(value = "exe.instruction.result", required=false) String instruction_result, * /
             @RequestBody HiveBotData botData,
             HttpServletRequest request
             )
@@ -191,6 +315,7 @@ public class BotController {
         logger.debug("\r\nJSON::RESPONSE\r\n" + jsonLogHelper.toJSONString(responseEntity.getBody()));
         return responseEntity;
     }
+    */
 
     private EnumSet<AppSettings.HiveSaveOperation> _translateSaveOperations(String action){
         EnumSet<AppSettings.HiveSaveOperation> saveOperations =

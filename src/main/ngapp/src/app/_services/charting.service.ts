@@ -54,7 +54,6 @@ export class ChartingService {
         this.alertService.showLoading();
         
         let getURL = environment.mclientChartBaseURL;
-        getURL = getURL + environment.mclimateBotId + "/temp_humidity";
 
         // Initialize Params Object
         let getParams = new HttpParams();
@@ -62,6 +61,8 @@ export class ChartingService {
         // Begin assigning parameters
         getParams = getParams.append('flashbackMinutes', String(this.paramFlashbackMinutes));
         getParams = getParams.append('intervalMinutes', String(this.paramIntervalMinutes));
+        getParams = getParams.append('hiveBotId', environment.mclimateBotId);
+
 
         /*console.log("Request::enableFunctions::"+ postURL +
           JSON.stringify(hiveData));
