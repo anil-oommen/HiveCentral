@@ -110,7 +110,7 @@ Secure Access Required, Use Login Feature in NgApp to login as 'guest'
 Initialize & Setup with Default Values for Demo (Controller : ***/api/hivecentral/secure/save.{options}***)
 Secure Access Required, Use Login Feature in NgApp to login as 'guest'
 ```
-	action = save_set_datamap
+	options = set_datamap
 	Payload  = {
 	"accessKey": "7c85a75e121be...........",
 	"hiveBotId": "DEMO.HIVE MICLIM.01",
