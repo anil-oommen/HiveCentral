@@ -1,29 +1,14 @@
 package com.oom.hive.central;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.EnumSet;
-import java.util.TimeZone;
+
 
 
 public class AppSettings {
 
-    public final static String TSTAMP_FORMAT = "dd-MMM HH:mm";
-    public final static SimpleDateFormat sDateFormat = new SimpleDateFormat(TSTAMP_FORMAT);
+    public static final String TSTAMP_FORMAT = "dd-MMM HH:mm";
 
-
-
-    public static String formatDate(Date inDate){
-        return sDateFormat.format(inDate);
-    }
-    public static Date parseDate(String inDate) throws ParseException {
-        return sDateFormat.parse(inDate);
-    }
 
     public final static String EMPTY_HIVEINSTRUCTION =".none.";
 
@@ -41,21 +26,21 @@ public class AppSettings {
         BOT_IS_ALIVE
     }
     public static String hiveOperationsToString(EnumSet<HiveSaveOperation> hsOperations){
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         hsOperations.forEach(oper->{
             switch(oper){
-                case ADD_INSTRUCTIONS : stringBuffer.append("ADD_INSTRUCTIONS"); break;
-                case SET_INSTRUCTIONS : stringBuffer.append("SET_INSTRUCTIONS"); break;
-                case CLEAR_INSTRUCTIONS : stringBuffer.append("CLEAR_INSTRUCTIONS"); break;
-                case ADD_DATAMAP : stringBuffer.append("ADD_DATAMAP"); break;
-                case SET_DATAMAP : stringBuffer.append("SET_DATAMAP"); break;
-                case CLEAR_DATAMAP : stringBuffer.append("CLEAR_DATAMAP"); break;
-                case SAVE_INFO : stringBuffer.append("SAVE_INFO"); break;
-                case EVENTLOG_DATAMAP : stringBuffer.append("EVENTLOG_DATAMAP"); break;
-                case BOT_IS_ALIVE : stringBuffer.append("BOT_IS_ALIVE"); break;
+                case ADD_INSTRUCTIONS : stringBuilder.append("ADD_INSTRUCTIONS"); break;
+                case SET_INSTRUCTIONS : stringBuilder.append("SET_INSTRUCTIONS"); break;
+                case CLEAR_INSTRUCTIONS : stringBuilder.append("CLEAR_INSTRUCTIONS"); break;
+                case ADD_DATAMAP : stringBuilder.append("ADD_DATAMAP"); break;
+                case SET_DATAMAP : stringBuilder.append("SET_DATAMAP"); break;
+                case CLEAR_DATAMAP : stringBuilder.append("CLEAR_DATAMAP"); break;
+                case SAVE_INFO : stringBuilder.append("SAVE_INFO"); break;
+                case EVENTLOG_DATAMAP : stringBuilder.append("EVENTLOG_DATAMAP"); break;
+                case BOT_IS_ALIVE : stringBuilder.append("BOT_IS_ALIVE"); break;
                 default: break;
             }
         });
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 }

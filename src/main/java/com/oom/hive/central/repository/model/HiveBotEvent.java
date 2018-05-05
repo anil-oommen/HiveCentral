@@ -9,11 +9,11 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HiveBotEvent {
 
-    public String botId;
+    private String botId;
     @JsonFormat(pattern= AppSettings.TSTAMP_FORMAT)
-    public Date time;
-    public String key;
-    public String value;
+    private Date time;
+    private String key;
+    private String value;
 
     public String getBotId() {
         return botId;

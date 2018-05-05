@@ -2,7 +2,6 @@ package com.oom.hive.central;
 
 
 import com.mongodb.MongoClient;
-//import cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.apache.commons.lang3.StringUtils;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.io.IOException;
 import java.util.Arrays;
 
 @Configuration
@@ -46,7 +43,7 @@ public class MongoConfig {
             logger.warn("No UserName or Password set. Will attempt connecting directly");
             mongoClient = new MongoClient(hostname,port);
         }else{
-            logger.warn("Connecting with username: " + username + " password:XXXXXX");
+            logger.warn("Connecting with username: {} password:XXXXXX",username);
             MongoCredential mongodbConnectCreds =
                     MongoCredential.createCredential(
                             username,

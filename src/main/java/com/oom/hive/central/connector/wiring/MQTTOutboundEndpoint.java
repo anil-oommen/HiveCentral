@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 
 @Component
 @Profile({"ModuleMQTT"})
@@ -59,19 +60,21 @@ public class MQTTOutboundEndpoint {
     private String getMqttClientIdForOutbound(){
         String hostName ="UNKNOWN";
         try { hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {}
+        } catch (UnknownHostException e) {
+            logger.error("Error getting Host for MQTT Outbound",e);
+        }
         return mqttClientPrefix +"." + hostName+".sender";
     }
 
     @Bean
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
-        logger.info("MQTT Server URL " + mqttUrl);
+        logger.info("MQTT Server URL {0}", mqttUrl);
         factory.setServerURIs(mqttUrl);
         if(StringUtils.isEmpty(mqttUser)){
             logger.warn("MQTT No UserName/Password set. Will connect without any");
         }else{
-            logger.warn("MQTT Connecting with UserName:" + mqttUser +" Passsword:XXXXX");
+            logger.warn("MQTT Connecting with UserName: {} Passsword:XXXXX",mqttUser);
             factory.setUserName(mqttUser);
             factory.setPassword(mqttPassword);
         }
@@ -88,34 +91,7 @@ public class MQTTOutboundEndpoint {
 
     @Value( "${mqtt.topic.controller.receive}" )
     private String mqttControllerRecieveTopic;
-    /*
-    @Bean
-    public MessageChannel mqttInputChannel() {
-        return new FixedSubscriberChannel(mqttInputHandler());
-    }
 
-    @Autowired
-    MQTTInboundHandler mqttMessageHandler;
-
-    @Bean
-    @ServiceActivator(inputChannel = "mqttInputChannel")
-    public MessageHandler mqttInputHandler(){
-        return mqttMessageHandler;
-    }
-
-    @Bean
-    public MessageProducer mqttMessageProducer() {
-        logger.info("MQTT Registering Client: " + getMqttClientIdForInbound() +" topic: " + mqttControllerRecieveTopic);
-        MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
-                getMqttClientIdForInbound(),
-                mqttClientFactory(), mqttControllerRecieveTopic);
-        adapter.setCompletionTimeout(5000);
-        adapter.setConverter(new DefaultPahoMessageConverter());
-        adapter.setOutputChannel(mqttInputChannel());
-        adapter.setQos(1);
-        return adapter;
-    }
-    */
 
 
 
@@ -134,7 +110,7 @@ public class MQTTOutboundEndpoint {
         if(botData.getHiveBotId().contains("MICLIM")){
             destinationChannel =  "mqttOutboundJSONTransformMicroClimateBOT";
         }
-        logger.info("MQTT Routing  > "+ botData.getHiveBotId() + " to '" + destinationChannel + "'");
+        logger.info("MQTT Routing  > {} to '{}'", botData.getHiveBotId(),destinationChannel );
         return destinationChannel;
     }
 

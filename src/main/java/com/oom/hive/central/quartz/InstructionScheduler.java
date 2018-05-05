@@ -68,8 +68,7 @@ public class InstructionScheduler {
                 }
             });
         } catch (SchedulerException e) {
-            logger.error("           -Error Scanning for Old Jobs of HiveBot to delete ");
-            e.printStackTrace();
+            logger.error("           -Error Scanning for Old Jobs of HiveBot to delete ", e);
         }
     }
 
@@ -226,11 +225,11 @@ public class InstructionScheduler {
         return instructionJobSchedules;
     }
 
-    public static Comparator<InstructionJobSchedule> insrJobComparator = new Comparator<InstructionJobSchedule>() {
+    public static final Comparator<InstructionJobSchedule> insrJobComparator = new Comparator<InstructionJobSchedule>() {
         public int compare(InstructionJobSchedule s1, InstructionJobSchedule s2) {
             Date jobSchedule1 = s1.getNextFireTime();
             Date jobSchedule2 = s2.getNextFireTime();
-            if(jobSchedule1!=null && jobSchedule1!=null){
+            if(jobSchedule1!=null && jobSchedule2!=null){
                 return jobSchedule1.compareTo(jobSchedule2);
             }else{
                 return s1.getKey().compareTo(s2.getKey());

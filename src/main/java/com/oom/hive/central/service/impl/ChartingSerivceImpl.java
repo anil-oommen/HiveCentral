@@ -27,7 +27,7 @@ public class ChartingSerivceImpl implements ChartingService{
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ChartingSerivceImpl.class);
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z");
+    private SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z");
 
     @Autowired
     HiveBotEventsRepository eventsRepository ;
@@ -77,9 +77,9 @@ public class ChartingSerivceImpl implements ChartingService{
 
 
     public class TemperatureHumidityTSeries{
-        public LocalDateTime ldtEndWindow = null;
-        public LocalDateTime ldtStartWindowFrom = null;
-        public List<TemperatureHumidity> dataListTempHumidity = new ArrayList<TemperatureHumidity>();
+        private LocalDateTime ldtEndWindow = null;
+        private LocalDateTime ldtStartWindowFrom = null;
+        private List<TemperatureHumidity> dataListTempHumidity = new ArrayList<TemperatureHumidity>();
         Iterator<TemperatureHumidity> itrTempHumdTS=  null;
         TemperatureHumidity currentTempHumdTS =  null;
         public TemperatureHumidityTSeries(int flashBackMinutes, int intervalMinutes){
@@ -103,7 +103,7 @@ public class ChartingSerivceImpl implements ChartingService{
             LocalDateTime startDateTime = LocalDateTime.now();
             {
                 //Adjust Window to closest rounded value.
-                startDateTime = startDateTime.minusMinutes(flashBackMinutes + intervalMinutes);
+                startDateTime = startDateTime.minusMinutes((long)flashBackMinutes + intervalMinutes);
                 startDateTime = startDateTime.minusMinutes((startDateTime.getMinute() % intervalMinutes));
                 startDateTime = startDateTime.minusSeconds(startDateTime.getSecond());
             }
@@ -137,7 +137,7 @@ public class ChartingSerivceImpl implements ChartingService{
 
         void fitEventToTimeSeries(HiveBotEvent hvBotEvent){
 
-            if(currentTempHumdTS!=null && hvBotEvent.time.after(currentTempHumdTS.getSeriesDate())){
+            if(currentTempHumdTS!=null && hvBotEvent.getTime().after(currentTempHumdTS.getSeriesDate())){
                 //Time to move to next TimeSeries
                 _moveNextTSeries();
             }

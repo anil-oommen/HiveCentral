@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class BotClientDataMapper {
         if(!StringUtils.isEmpty(jsonBotData.getTimestamp())) {
             try {
                 hiveBot.setLastHearbeat(
-                        AppSettings.parseDate(jsonBotData.getTimestamp())
+                        new SimpleDateFormat(AppSettings.TSTAMP_FORMAT).parse(jsonBotData.getTimestamp())
                 );
             } catch (ParseException pEx) {
                 BotDataParseException bdPE = new BotDataParseException("Parse Error on HeartBeat" + pEx.getMessage());
