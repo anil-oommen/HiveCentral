@@ -46,7 +46,7 @@ public class TimeSeriesDataCompiler {
 
         LocalDateTime ldtEndWindow = LocalDateTime.now();
         LocalDateTime ldtStartWindow = LocalDateTime.now();
-        ldtStartWindow = ldtStartWindow.minusMinutes(flashBackMinutes+intervalMinutes);
+        ldtStartWindow = ldtStartWindow.minusMinutes((long)flashBackMinutes+intervalMinutes);
         ldtStartWindow = ldtStartWindow.minusMinutes((ldtStartWindow.getMinute()%intervalMinutes));
         ldtStartWindow = ldtStartWindow.minusSeconds(ldtStartWindow.getSecond());
 

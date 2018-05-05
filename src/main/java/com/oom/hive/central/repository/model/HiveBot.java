@@ -13,18 +13,18 @@ public class HiveBot {
 
 
     @Id
-    public String botId;
-    public String botVersion;
+    private String botId;
+    private String botVersion;
 
     @JsonFormat(pattern= AppSettings.TSTAMP_FORMAT)
-    public Date lastHearbeat;
-    public String status;
+    private Date lastHearbeat;
+    private String status;
 
-    String enabledFunctions;
+    private String enabledFunctions;
 
 
-    Map<String,String> dataMap = new HashMap<String,String>();
-    Collection<HiveBotInstruction> instructions = new HashSet<HiveBotInstruction>();
+    private Map<String,String> dataMap = new HashMap<String,String>();
+    private Collection<HiveBotInstruction> instructions = new HashSet<HiveBotInstruction>();
 
 
     public String toString(){

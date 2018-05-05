@@ -1,6 +1,5 @@
 package com.oom.hive.central.service.impl;
 
-import com.oom.hive.central.connector.MQTTInboundHandler;
 import com.oom.hive.central.connector.MQTTOutboundGateway;
 import com.oom.hive.central.mappers.DataModeToServiceModel;
 import com.oom.hive.central.model.HiveBotData;
@@ -39,14 +38,14 @@ public class BotNotificationServiceImpl implements BotNotificationService{
     public void executeInstruction(HiveBot hiveBot, HiveBotInstruction hiveBotInstruction){
         HiveBotData hiveBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
-        hiveBotData.setDataType(HiveBotDataType.ExecuteInstruction);
+        hiveBotData.setDataType(HiveBotDataType.EXECUTE_INSTRUCTION);
         _sendSingleInstruction(hiveBot,hiveBotData,hiveBotInstruction);
     }
 
     public void updateFunctions(HiveBot hiveBot){
         HiveBotData hiveBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
-        hiveBotData.setDataType(HiveBotDataType.UpdateFunctions);
+        hiveBotData.setDataType(HiveBotDataType.UPDATE_FUNCTIONS);
         _sendMessage(hiveBotData);
     }
 
@@ -84,7 +83,7 @@ public class BotNotificationServiceImpl implements BotNotificationService{
     public void sendCatchupForBotClient(HiveBot hiveBot){
         HiveBotData hiveBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
-        hiveBotData.setDataType(HiveBotDataType.CatchupPostBootup);
+        hiveBotData.setDataType(HiveBotDataType.CATCHUP_POST_BOOTUP);
         //Send Basic Information without any Backlog Instruction
         _sendMessage(hiveBotData);
         //Send all the backlog instructions , ordered

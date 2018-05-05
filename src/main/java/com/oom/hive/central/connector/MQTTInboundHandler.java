@@ -35,13 +35,13 @@ public class MQTTInboundHandler implements MessageHandler {
     @Override
     public void handleMessage(Message<?> message) throws MessagingException {
         try {
-            StringBuffer sBuffer = new StringBuffer();
+            StringBuilder sBuffer = new StringBuilder();
             message.getHeaders().forEach((key, value) -> {
                 sBuffer.append(" " + key + " = " + value);
             });
             logger.info("MQTT Received  <  <  < ");
-            logger.info("MQTT < Message Header(" + sBuffer.toString() + ")");
-            logger.info("MQTT < Payload (" + message.getPayload().toString() + ")");
+            logger.info("MQTT < Message Header({})", sBuffer.toString());
+            logger.info("MQTT < Payload ({})",message.getPayload().toString());
 
             //if (1 > 0) return;
 
@@ -59,7 +59,7 @@ public class MQTTInboundHandler implements MessageHandler {
                 if (!StringUtils.isEmpty(botData.getHiveBotId())
                         && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
                         ) {
-                    if(HiveBotDataType.SensorData.equals(botData.getDataType())) {
+                    if(HiveBotDataType.SENSOR_DATA.equals(botData.getDataType())) {
                         EnumSet<AppSettings.HiveSaveOperation> saveOperations =
                                 EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
                                         AppSettings.HiveSaveOperation.ADD_DATAMAP,
@@ -68,24 +68,24 @@ public class MQTTInboundHandler implements MessageHandler {
                                 );
                         reportingService.saveBot(botData, saveOperations);
 
-                    } else if(HiveBotDataType.BootupHivebot.equals(botData.getDataType())) {
+                    } else if(HiveBotDataType.BOOTUP_HIVEBOT.equals(botData.getDataType())) {
                         //At Bootup , Send CatchUp for all Missed Work.
                         //Note , while in DeepSleep all MQTT messages are missed.
                         notificationService.sendCatchupForBotClient(reportingService.getBot(botData.getHiveBotId()));
-                    }else if(HiveBotDataType.InstructionCompleted.equals(botData.getDataType())
-                            || HiveBotDataType.InstructionFailed.equals(botData.getDataType())
+                    }else if(HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
+                            || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
                             ){
-                        _markInstructionCompleted(botData);
+                        p_markInstructionCompleted(botData);
 
                     }else{
-                        logger.warn("Unsupported or Null DataType Ignoring: " + botData.getDataType());
+                        logger.warn("Unsupported or Null DataType Ignoring: {}" , botData.getDataType());
                     }
 
                 } else {
-                    logger.warn("Authentication Failed with Creds" + botData.getHiveBotId() + " " + botData.getAccessKey());
+                    logger.warn("Authentication Failed with Creds {} {} " , botData.getHiveBotId() , botData.getAccessKey());
                 }
             } catch (BotDataParseException bEx) {
-                logger.warn("BadRequest Payload Ignoring:" + message.getPayload());
+                logger.warn("BadRequest Payload Ignoring: {} ", message.getPayload());
             }
         }catch(Exception rEx){
             logger.error("Error Handling Message", rEx);
@@ -93,13 +93,13 @@ public class MQTTInboundHandler implements MessageHandler {
         }
     }
 
-    private void _markInstructionCompleted(HiveBotData botData){
+    private void p_markInstructionCompleted(HiveBotData botData){
         botData.getInstructions().forEach(insr->{
             HiveBot hiveBot = reportingService.markInstructionCompleted(
                     botData,
                     insr.getInstrId(),
                     insr.getCommand(),
-                    (HiveBotDataType.InstructionCompleted.equals(botData.getDataType())?"Completed Sucessfull":"Completed Failed."),
+                    (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())?"Completed Sucessfull":"Completed Failed."),
                     EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
                             AppSettings.HiveSaveOperation.BOT_IS_ALIVE
                             )

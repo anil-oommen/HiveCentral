@@ -3,6 +3,7 @@ package com.oom.hive.central.utils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpOutputMessage;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 @Component
 public class JsonLogHelper {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JsonLogHelper.class);
 
 
     public String toJSONString(Object o)  {
@@ -23,7 +25,7 @@ public class JsonLogHelper {
             beutifulJson = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
                     .writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("Error Converting Object to JSOB",e);
         }
         return beutifulJson;
     }

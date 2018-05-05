@@ -11,7 +11,6 @@ import java.util.Set;
 public class EuropaceAirconIRMapper implements  AirconIRMapper {
 
 
-    public String prevRawIRDataPack=null;
 
     public HiveBot enrichDataSet(HiveBot hiveBot){
 

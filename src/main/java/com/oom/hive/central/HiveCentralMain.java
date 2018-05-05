@@ -26,10 +26,10 @@ public class HiveCentralMain {
 
 
 	@Value("${app.build.version}")
-	private String app_build_version;
+	private String appBuildVersion;
 
 	@Value("${app.build.timestamp}")
-	private String app_build_timestamp;
+	private String appBuildTimestamp;
 
 	public static void main(String[] args) {
 
@@ -41,14 +41,14 @@ public class HiveCentralMain {
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
 
-			logger.info("Application Build: " + app_build_version +
-					" " + app_build_timestamp
+			logger.info("Application Build: {} {} ", appBuildVersion ,
+					appBuildTimestamp
 			);
 			//Inspect Bean Def
 			String[] beanNames = ctx.getBeanDefinitionNames();
 			Arrays.sort(beanNames);
 			for (String beanName : beanNames) {
-				//System.out.println(beanName);
+				logger.info("\t Bean Loaded {} ",beanName);
 			}
 		};
 	}

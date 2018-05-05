@@ -6,6 +6,7 @@ import com.oom.hive.central.model.Instruction;
 import com.oom.hive.central.repository.model.HiveBot;
 import com.oom.hive.central.repository.model.HiveBotInstruction;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -15,7 +16,8 @@ public class DataModeToServiceModel {
         HiveBotData hiveBotData = new HiveBotData();
         hiveBotData.setHiveBotId(hiveBot.getBotId());
         hiveBotData.setHiveBotVersion(hiveBot.getBotVersion());
-        hiveBotData.setTimestamp(AppSettings.formatDate(hiveBot.getLastHearbeat()));
+        hiveBotData.setTimestamp(new SimpleDateFormat(AppSettings.TSTAMP_FORMAT).
+                format((hiveBot.getLastHearbeat())));
         return hiveBotData;
     }
 

@@ -3,9 +3,9 @@ package com.oom.hive.central.model;
 import com.oom.hive.central.repository.model.HiveBot;
 
 public class HiveCentralResponse {
-    public String ackSuccess;
-    public String message;
-    public Iterable<HiveBot> bots;
+    private String ackSuccess;
+    private String message;
+    private Iterable<HiveBot> bots;
 
     public HiveCentralResponse(String ackSuccess, String message){
         this.ackSuccess = ackSuccess;

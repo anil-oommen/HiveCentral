@@ -104,7 +104,7 @@ public class InstructionServiceImpl implements InstructionService{
         return jobKey.getName().startsWith( hiveBotId+"_" );
     }
 
-    public static String HIVEBOT_GROUP_NAME = "HiveBotGroup";
+    private static String HIVEBOT_GROUP_NAME = "HiveBotGroup";
 
 
 
