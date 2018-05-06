@@ -1,5 +1,4 @@
 package com.oom.hive.central.connector.wiring;
-
 import com.oom.hive.central.connector.MQTTInboundHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.stereotype.Component;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -51,19 +49,21 @@ public class MQTTInboundEndpoint {
     private String getMqttClientIdForInbound(){
         String hostName ="UNKNOWN";
         try { hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {}
+        } catch (UnknownHostException e) {
+            logger.error("Error getting MQTT Host",e);
+        }
         return mqttClientPrefix +"." + hostName+".receiver";
     }
 
     @Bean
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
-        logger.info("MQTT Server URL " + mqttUrl);
+        logger.info("MQTT Server URL {}" ,mqttUrl);
         factory.setServerURIs(mqttUrl);
         if(StringUtils.isEmpty(mqttUser)){
             logger.warn("MQTT No UserName/Password set. Will connect without any");
         }else{
-            logger.warn("MQTT Connecting with UserName:" + mqttUser +" Passsword:XXXXX");
+            logger.warn("MQTT Connecting with UserName:{} Passsword:XXXXX",mqttUser);
             factory.setUserName(mqttUser);
             factory.setPassword(mqttPassword);
         }
@@ -97,7 +97,7 @@ public class MQTTInboundEndpoint {
 
     @Bean
     public MessageProducer mqttMessageProducer() {
-        logger.info("MQTT Registering Client: " + getMqttClientIdForInbound() +" topic: " + mqttControllerRecieveTopic);
+        logger.info("MQTT Registering Client: {} topic: {}" ,getMqttClientIdForInbound(), mqttControllerRecieveTopic);
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
                 getMqttClientIdForInbound(),
                 mqttClientFactory(), mqttControllerRecieveTopic);

@@ -45,9 +45,8 @@ public class InstructionScheduler {
         registerInstructionInStore();
 
         try {
-            logger.info("           -Starting Quartz Scheduler Delay.Seconds(" + QUARTZ_STARTUP_DELAY_SECONDS +")");
+            logger.info("           -Starting Quartz Scheduler Delay.Seconds({})",QUARTZ_STARTUP_DELAY_SECONDS);
             schedulerFactoryBean.getScheduler().startDelayed(QUARTZ_STARTUP_DELAY_SECONDS);
-            //schedulerFactoryBean.getScheduler().start();
         } catch (SchedulerException e) {
             logger.error("           -Error Starting  Quartz Scheduler ",e);
         }
@@ -59,7 +58,7 @@ public class InstructionScheduler {
             logger.info("           -Scanning Existing Schedule to Delete/Deactivate(SET ) :   ");
             scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey-> {
                 if(instructionService.isMatchingBot(jobKey,jsonBotData.getHiveBotId())){
-                    logger.info("           --Found a Matching Schedule (" + jobKey.getName()+ "). Deleting ");
+                    logger.info("           --Found a Matching Schedule ({}). Deleting ",jobKey.getName());
                     try {
                         scheduler.deleteJob(jobKey);
                     } catch (SchedulerException e) {
@@ -82,32 +81,33 @@ public class InstructionScheduler {
         }
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        logger.info("           -Scanning For New Schedule To Register in Request :  " + jsonBotData.getHiveBotId() + " ");
+        logger.info("           -Scanning For New Schedule To Register in Request :  {}",jsonBotData.getHiveBotId());
         List<JobScheduleModel> jobScheduleModels = instructionService.getNewJSModelToInitilize(jsonBotData,saveOperations);
         jobScheduleModels.forEach(jsModel-> {
             try {
                 scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey->{
-                    //logger.debug("DEBUG:isMatch(" + jsModel.getJobDetail().getKey().getName() +")("+ jobKey.getName()+")");
                     if(jsModel.getJobDetail().getKey().getName().equals(jobKey.getName())){
-                        logger.info("           --Check JobKey already Exists :  Found:(" + jsModel.getJobDetail().getKey().getName() + ") ");
+                        logger.info("           --Check JobKey already Exists :  Found:({}) ",jsModel.getJobDetail().getKey().getName());
                         try {
                             scheduler.deleteJob(jobKey);
                             logger.info("           --Old Job Deleted:" );
                         } catch (SchedulerException e) {
-                            logger.error("           --Error Deleting old Job ("+jobKey.getName() +")",e);
+                            logger.error("           --Error Deleting old Job ({})",jobKey.getName(),e);
                         }
                     }
                 });
 
                 scheduler.scheduleJob(jsModel.getJobDetail(), jsModel.getTrigger());
             } catch (SchedulerException e) {
-                logger.error("           --Error Scheduling "+ jobScheduleModels.size()+" in :  " +
-                        jsonBotData.getHiveBotId() + " ",e);
+                logger.error("           --Error Scheduling {} in : {}  " ,
+                        jobScheduleModels.size(),
+                        jsonBotData.getHiveBotId() ,e);
             }
         });
 
-        logger.info("           -Found & Scheduled "+ jobScheduleModels.size()+" in :  " +
-                jsonBotData.getHiveBotId() + " ");
+        logger.info("           -Found & Scheduled {} in :  {} " ,
+                jobScheduleModels.size(),
+                jsonBotData.getHiveBotId() );
         return jobScheduleModels.size()>0;
     }
 
@@ -119,7 +119,7 @@ public class InstructionScheduler {
 
         hiveBots.forEach(hiveBot ->{
             //HiveBot hiveBot= botReportingService.getBot(itrBotId);
-            logger.info("           -Scanning For Schedule in :  " + hiveBot.getBotId() + " ");
+            logger.info("           -Scanning For Schedule in :  {} ",hiveBot.getBotId());
             List<JobScheduleModel> jobScheduleModels=
                     instructionService.getAllJobModelToInitilize(
                     hiveBot
@@ -129,13 +129,15 @@ public class InstructionScheduler {
                 try {
                     scheduler.scheduleJob(jsModel.getJobDetail(), jsModel.getTrigger());
                 } catch (SchedulerException e) {
-                    logger.error("           --Error Scheduling ("+ jsModel.getJobDetail().getKey().getName()+") in :  " +
-                            hiveBot.getBotId() + " ",e);
+                    logger.error("           --Error Scheduling ({}) in : {}  " ,
+                            jsModel.getJobDetail().getKey().getName(),
+                            hiveBot.getBotId() ,e);
                 }
             });
 
-            logger.info("           -Found & Scheduled "+ jobScheduleModels.size()+" in :  " +
-                    hiveBot.getBotId() + " ");
+            logger.info("           -Found & Scheduled {} in :  {} " ,
+                    jobScheduleModels.size(),
+                    hiveBot.getBotId() );
 
         });
 
@@ -151,7 +153,7 @@ public class InstructionScheduler {
                     if(jobKey.getName().equals(instructionJobKey)){
                         //Found the one to Delete.
                         scheduler.deleteJob(jobKey);
-                        logger.info("           -Removed Scheduled Instruction Job  :"  + instructionJobKey);
+                        logger.info("           -Removed Scheduled Instruction Job  : {}"  , instructionJobKey);
                     }
                 } catch (SchedulerException e) {
                     logger.error("           --Error Gathering all Job & Trigger Details :  " , e);
@@ -166,13 +168,13 @@ public class InstructionScheduler {
                         instr-> instructionJobKey.endsWith(new Long(instr.getInstrId()).toString()));
                 if(originalSize> hiveBot.getInstructions().size()){
                     botReportingService.saveBot(hiveBot);
-                    logger.info("           --Removed HiveBot Instruction from DB:"  + instructionJobKey);
+                    logger.info("           --Removed HiveBot Instruction from DB: {}"  , instructionJobKey);
                 }else{
-                    logger.error("           --Could not remove HiveBot Instruction from DB, Instruction Not Found:"  + instructionJobKey);
+                    logger.error("           --Could not remove HiveBot Instruction from DB, Instruction Not Found: {}"  , instructionJobKey);
                     return false;
                 }
             }else{
-                logger.error("           --HiveBot Not found ! Ignoring your delete instruction."  + instructionJobKey);
+                logger.error("           --HiveBot Not found ! Ignoring your delete instruction. {}" , instructionJobKey);
                 return false;
             }
 

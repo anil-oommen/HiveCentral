@@ -61,7 +61,6 @@ public class BotReportingServiceImpl implements BotReportingService{
 
     public boolean authenticate(String botId, String botAccesKey){
         HiveBot hiveBot = hiveBotRepo.findByBotId(botId);
-        //System.out.println(getSaltedHash(botId));
         return (hiveBot!=null
                 && botAccesKey.length() >= 5
                 && getSaltedHash(botId).startsWith(botAccesKey));
@@ -69,7 +68,6 @@ public class BotReportingServiceImpl implements BotReportingService{
 
     public HiveBot getBot(String botId){
         return hiveBotRepo.findByBotId(botId);
-        //return botClientRepo.findByBotId(botId);
     }
 
     public HiveBot markInstructionCompleted(HiveBotData botData,
@@ -104,7 +102,9 @@ public class BotReportingServiceImpl implements BotReportingService{
 
         hiveBotRepo.save(hiveBot);
 
-        logger.info("Marked Instruction. Removed(if.Onetime):" + instructionRemoved +",  Updated(if.Scheduled).Execute.Reset:" + foundInstructionToUpdateAsExecuteCompleted);
+        logger.info("Marked Instruction. Removed(if.Onetime):{},  Updated(if.Scheduled).Execute.Reset:{}",
+                instructionRemoved,
+                foundInstructionToUpdateAsExecuteCompleted);
 
         HiveBotEvent hiveBotEvent = new HiveBotEvent();
         hiveBotEvent.setBotId(hiveBot.getBotId());
@@ -123,7 +123,6 @@ public class BotReportingServiceImpl implements BotReportingService{
 
     public HiveBot saveBot(HiveBotData botData,
                            EnumSet<AppSettings.HiveSaveOperation> saveOperations){
-        //client.getDataSet();
         HiveBot hiveBot = getBot(botData.getHiveBotId());
         if(hiveBot==null)
             return null;
@@ -136,7 +135,6 @@ public class BotReportingServiceImpl implements BotReportingService{
 
 
 
-        //hiveBot = airconIRMapper.enrichDataSet(hiveBot);
         hiveBotRepo.save(hiveBot);
 
 

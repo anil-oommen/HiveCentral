@@ -77,8 +77,7 @@ public class InstructionServiceImpl implements InstructionService{
 
 
     private JobScheduleModel _buildJSModelIfValid(String hiveBotId, long botInstrId, String instrSchedule, String command, String params) {
-        //.usingJobData("param.botId", botId)
-        //       .usingJobData("param.botInstrId", botInstrId)
+
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("instr.botId", hiveBotId);
         jobDataMap.put("instr.botInstrId", botInstrId);
@@ -92,7 +91,6 @@ public class InstructionServiceImpl implements InstructionService{
                     .withDescription("HiveBot Instruction Schedulers")
                     .withIdentity(_assembleJobKey(hiveBotId,botInstrId))
                     .build();
-
 
             JobScheduleModel jobScheduleModel = new JobScheduleModel(jobDetail, trigger);
             return jobScheduleModel;
@@ -127,7 +125,6 @@ public class InstructionServiceImpl implements InstructionService{
                                 botSchedule.substring(14))
                         )
                         .build();
-                //System.err.println("++_+_:" + botSchedule.substring(14));
                 return trigger;
             } else if (botSchedule.startsWith("schedule.daily.HHMM:")) {
                 int hour = Integer.parseInt(botSchedule.substring(20, 20 + 2));
@@ -139,9 +136,8 @@ public class InstructionServiceImpl implements InstructionService{
                         .build();
                 return trigger;
             }else{
-                logger.error("           --Invalid Schedule Expression " +
-                        botId + ":" + botInstrId +" " +
-                        botSchedule);
+                logger.error("           --Invalid Schedule Expression {}:{} {}",
+                        botId , botInstrId , botSchedule);
             }
         }catch(RuntimeException rEx){
             logger.error( "           --Error Parsing Schedule Expression " +

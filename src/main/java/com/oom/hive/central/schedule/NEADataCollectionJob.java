@@ -34,7 +34,7 @@ import java.util.Map;
 public class NEADataCollectionJob {
 
 
-    // http://api.nea.gov.sg/api/WebAPI/?dataset=2hr_nowcast&keyref=781CF461BB6606AD1260F4D81345157F059A2EFA2D1C36B6
+    // http://api.nea.gov.sg/api/WebAPI/?dataset=2hr_nowcast&keyref=ADDKEY
     // https://www.nea.gov.sg/docs/default-source/api/developer's-guide.pdf
 
 
@@ -114,13 +114,7 @@ public class NEADataCollectionJob {
                     )
             );
 
-        } catch (SAXException e) {
-            logger.error("NEA Data Collect Error",e);
-        } catch (IOException e) {
-            logger.error("NEA Data Collect Error",e);
-        } catch (ParserConfigurationException e) {
-            logger.error("NEA Data Collect Error",e);
-        } catch (XPathExpressionException e) {
+        } catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException e) {
             logger.error("NEA Data Collect Error",e);
         }
 

@@ -1,43 +1,21 @@
 package com.oom.hive.central.utils.tsummar;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.oom.hive.central.model.ChartJSData;
-import com.oom.hive.central.repository.HiveBotEventsRepository;
-import com.oom.hive.central.repository.model.HiveBotEvent;
-import org.bson.conversions.Bson;
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Filters.lt;
-
+import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.function.Consumer;
 
 public class TimeSeriesDataCompiler {
-
-    public TimeSeriesDataCompiler()
-    {
-
-    }
-
-    public static void addEventData(HiveBotEvent hiveBoteEvent){
-
-    }
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TimeSeriesDataCompiler.class);
 
 
     public static void main(String a[]){
         TimeSeriesDataCompiler aaaa = new TimeSeriesDataCompiler();
-        aaaa.prepareTimeSeriesData("",new String[]{"",""},
+        aaaa.prepareTimeSeriesData(
                 60*6,5*3);
     }
 
-    public ChartJSData prepareTimeSeriesData(String botId,
-                                             String[] seriesKeyName,
+    private ChartJSData prepareTimeSeriesData(
                                              int flashBackMinutes,
                                              int intervalMinutes){
         ChartJSData chartJsData = new ChartJSData();
@@ -50,18 +28,16 @@ public class TimeSeriesDataCompiler {
         ldtStartWindow = ldtStartWindow.minusMinutes((ldtStartWindow.getMinute()%intervalMinutes));
         ldtStartWindow = ldtStartWindow.minusSeconds(ldtStartWindow.getSecond());
 
-        System.out.println("../.../..../");
-        System.out.println("from " + ldtStartWindow.format(formatter));
-        System.out.println("to " + ldtEndWindow.format(formatter));
-        while(ldtStartWindow.isBefore(ldtEndWindow)){
+        if(logger.isInfoEnabled()) {
+            logger.info("../.../..../");
+            logger.info("from {}", ldtStartWindow.format(formatter));
+            logger.info("to {}", ldtEndWindow.format(formatter));
+            while (ldtStartWindow.isBefore(ldtEndWindow)) {
 
-            System.out.print(ldtStartWindow.format(formatter));
-            System.out.print("   " + (ldtStartWindow.getMinute()%intervalMinutes));
-
-
-
-            System.out.println();
-            ldtStartWindow = ldtStartWindow.plusMinutes(intervalMinutes);
+                logger.info(ldtStartWindow.format(formatter));
+                logger.info("   {}", (ldtStartWindow.getMinute() % intervalMinutes));
+                ldtStartWindow = ldtStartWindow.plusMinutes(intervalMinutes);
+            }
         }
         return chartJsData;
     }

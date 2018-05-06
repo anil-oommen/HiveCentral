@@ -1,6 +1,5 @@
 package com.oom.hive.central.service.impl;
 
-import com.oom.hive.central.controller.BotController;
 import com.oom.hive.central.model.ChartJSData;
 import com.oom.hive.central.model.charting.sensordata.TemperatureHumidity;
 import com.oom.hive.central.repository.HiveBotEventsRepository;
@@ -10,14 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -41,12 +36,12 @@ public class ChartingSerivceImpl implements ChartingService{
 
 
         TemperatureHumidityTSeries thTSeries = new TemperatureHumidityTSeries(flashBackMinutes,  intervalMinutes);
-        logger.info( "CHART Querying for Events on:" + hiveBotId +
-                        "\n\t from:" + thTSeries.ldtStartWindowFrom.format(formatter) +
-                        "\n\t to:" + thTSeries.ldtEndWindow.format(formatter) +
-                        "\n\t FlashBack(Minutes) :" + flashBackMinutes +
-                        "\n\t Interval:(Minutes)" + intervalMinutes
-        );
+        if(logger.isInfoEnabled()) {
+            logger.info("CHART Querying for Events on:{} \n\t from:{} \n\t to: {} \n\t FlashBack(Minutes) : {} \n\t Interval:(Minutes) {} ",
+                    hiveBotId, thTSeries.ldtStartWindowFrom.format(formatter),
+                    thTSeries.ldtEndWindow.format(formatter), flashBackMinutes, intervalMinutes
+            );
+        }
         try (Stream<HiveBotEvent> eventStream = eventsRepository
                 .findInTimeSeries(hiveBotId,
                         eventKeys,
@@ -120,16 +115,15 @@ public class ChartingSerivceImpl implements ChartingService{
                     currentTempHumdTS.setHumidity(_oldCurrentTempHumdTS.getHumidity());
                 }
 
-                logger.debug("CHART TInterval:" +
-                        ((_oldCurrentTempHumdTS!=null)?sdf.format(_oldCurrentTempHumdTS.getSeriesDate()):"") + "  --->--- " +
-                        ((currentTempHumdTS!=null)?sdf.format(currentTempHumdTS.getSeriesDate()):"") + " .next()" );
+                logger.debug("CHART TInterval:{} --->--- {} .next()" ,
+                        ((_oldCurrentTempHumdTS!=null)?sdf.format(_oldCurrentTempHumdTS.getSeriesDate()):"") ,
+                        ((currentTempHumdTS!=null)?sdf.format(currentTempHumdTS.getSeriesDate()):"")  );
                 return true;
             }else{
                 TemperatureHumidity _oldCurrentTempHumdTS = currentTempHumdTS;
                 currentTempHumdTS=null;
-                logger.debug("CHART TInterval:" +
-                        ((_oldCurrentTempHumdTS!=null)?sdf.format(_oldCurrentTempHumdTS.getSeriesDate()):"") + "  --->--- " +
-                         " FINISHED " );
+                logger.debug("CHART TInterval:{} --->---  FINISHED" ,
+                        ((_oldCurrentTempHumdTS!=null)?sdf.format(_oldCurrentTempHumdTS.getSeriesDate()):"")  );
 
                 return false;
             }
@@ -155,9 +149,10 @@ public class ChartingSerivceImpl implements ChartingService{
                     actionToTake = " IGNORE. EventKey not expected. Possibly NoSQL Filter is incorrect";
                 }
             }
-            logger.debug("CHART EventData:" + sdf.format(hvBotEvent.getTime())
-                    + " " + hvBotEvent.getKey() + ":"
-                    + hvBotEvent.getValue() + "  " +
+            logger.debug("CHART EventData: {} {}:{} {} " ,
+                    sdf.format(hvBotEvent.getTime()) ,
+                    hvBotEvent.getKey() ,
+                    hvBotEvent.getValue() ,
                     actionToTake
             );
 

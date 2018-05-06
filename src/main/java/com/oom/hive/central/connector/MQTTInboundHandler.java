@@ -41,52 +41,49 @@ public class MQTTInboundHandler implements MessageHandler {
             });
             logger.info("MQTT Received  <  <  < ");
             logger.info("MQTT < Message Header({})", sBuffer);
-            logger.info("MQTT < Payload ({})",message.getPayload().toString());
-
-            //if (1 > 0) return;
+            logger.info("MQTT < Payload ({})", message.getPayload().toString());
 
             HiveBotData botData = null;
-            try {
-                botData = objectMapper.readValue(message.getPayload().toString(),
-                        HiveBotData.class);
-            } catch (IOException e) {
-                logger.error("MQTT JSON ParseError ", e);
-                return;
-            }
 
-            try {
-                //Authenticate Bot
-                if (!StringUtils.isEmpty(botData.getHiveBotId())
-                        && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
+
+            botData = objectMapper.readValue(message.getPayload().toString(),
+                    HiveBotData.class);
+
+            //Authenticate Bot
+            if (!StringUtils.isEmpty(botData.getHiveBotId())
+                    && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
+                    ) {
+                if (HiveBotDataType.SENSOR_DATA.equals(botData.getDataType())) {
+                    EnumSet<AppSettings.HiveSaveOperation> saveOperations =
+                            EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
+                                    AppSettings.HiveSaveOperation.ADD_DATAMAP,
+                                    AppSettings.HiveSaveOperation.EVENTLOG_DATAMAP,
+                                    AppSettings.HiveSaveOperation.BOT_IS_ALIVE
+                            );
+                    reportingService.saveBot(botData, saveOperations);
+
+                } else if (HiveBotDataType.BOOTUP_HIVEBOT.equals(botData.getDataType())) {
+                    //At Bootup , Send CatchUp for all Missed Work.
+                    //Note , while in DeepSleep all MQTT messages are missed.
+                    notificationService.sendCatchupForBotClient(reportingService.getBot(botData.getHiveBotId()));
+                } else if (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
+                        || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
                         ) {
-                    if(HiveBotDataType.SENSOR_DATA.equals(botData.getDataType())) {
-                        EnumSet<AppSettings.HiveSaveOperation> saveOperations =
-                                EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
-                                        AppSettings.HiveSaveOperation.ADD_DATAMAP,
-                                        AppSettings.HiveSaveOperation.EVENTLOG_DATAMAP,
-                                        AppSettings.HiveSaveOperation.BOT_IS_ALIVE
-                                );
-                        reportingService.saveBot(botData, saveOperations);
-
-                    } else if(HiveBotDataType.BOOTUP_HIVEBOT.equals(botData.getDataType())) {
-                        //At Bootup , Send CatchUp for all Missed Work.
-                        //Note , while in DeepSleep all MQTT messages are missed.
-                        notificationService.sendCatchupForBotClient(reportingService.getBot(botData.getHiveBotId()));
-                    }else if(HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
-                            || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
-                            ){
-                        p_markInstructionCompleted(botData);
-
-                    }else{
-                        logger.warn("Unsupported or Null DataType Ignoring: {}" , botData.getDataType());
-                    }
+                    p_markInstructionCompleted(botData);
 
                 } else {
-                    logger.warn("Authentication Failed with Creds {} {} " , botData.getHiveBotId() , botData.getAccessKey());
+                    logger.warn("Unsupported or Null DataType Ignoring: {}", botData.getDataType());
                 }
-            } catch (BotDataParseException bEx) {
-                logger.warn("BadRequest Payload Ignoring: {} ", message.getPayload());
+
+            } else {
+                logger.warn("Authentication Failed with Creds {} {} ", botData.getHiveBotId(), botData.getAccessKey());
             }
+
+        } catch (BotDataParseException bEx) {
+            logger.warn("BadRequest Payload Ignoring: {} ", message.getPayload());
+        }catch (IOException ioE){
+            logger.error("MQTT JSON ParseError ", ioE);
+            return;
         }catch(Exception rEx){
             logger.error("Error Handling Message", rEx);
             throw rEx;

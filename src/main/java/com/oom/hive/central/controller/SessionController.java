@@ -39,27 +39,5 @@ public class SessionController {
         );
     }
 
-    /*
-    @RequestMapping(value= "/public/form.login", method = RequestMethod.GET )
-    public ResponseEntity<String> infoForLogin(){
-        return new ResponseEntity<>("Login Info Page, Submit POST to /api/session//public/login",HttpStatus.ACCEPTED);
-    }
-
-    @RequestMapping(value= "/public/login", method = RequestMethod.POST )
-    public ResponseEntity<String> login(
-            @RequestParam(value="username"  ) String username,
-            @RequestParam(value="password"  ) String password
-    ){
-
-        return new ResponseEntity<>("OK",HttpStatus.ACCEPTED);
-    }
-
-    @RequestMapping(value= "/public/logout", method = RequestMethod.GET )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(HttpSession session){
-        session.invalidate();
-    }
-
-    */
 
 }

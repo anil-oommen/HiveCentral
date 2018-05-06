@@ -162,7 +162,7 @@ public class MQTTOutboundEndpoint {
 
     @ServiceActivator(inputChannel = "mqttOutboundDiscardDeadQueue")
     public void handleDiscardDeadQueue(String botData) {
-        logger.error("Discarded Message " + botData);
+        logger.error("Discarded Message {}" , botData);
     }
 
 

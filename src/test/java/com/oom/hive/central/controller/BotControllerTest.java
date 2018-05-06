@@ -185,9 +185,23 @@ public class BotControllerTest extends  BaseControllerTest{
     }
 
 
+    @Test
+    public void test0060ListAllInstructionsPublic() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+
+        String responseBody =  mockMvc.perform(post("/api/instrschedule/public/list.all")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+
+    }
 
     @Test
-    public void test0060RegisterNewBotSecure() throws Exception {
+    public void test0070RegisterNewBotSecure() throws Exception {
         HiveBotData hiveBotData = new HiveBotData();
         hiveBotData.setHiveBotId(botId);
         hiveBotData.setHiveBotVersion(botVersion);
@@ -221,6 +235,170 @@ public class BotControllerTest extends  BaseControllerTest{
 
 
     }
+
+
+    @Test
+    public void test0080SaveFunctionsSecure() throws Exception {
+
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+        hiveBotData.setEnabledFunctions(".+TESTFUNCT1+TESTFUNCT2");
+
+        //Login to Controller
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+
+        request  =  mockMvc.perform(post("/api/hivecentral/secure/save.func.")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.status", Matchers.is("ACK")))
+                .andExpect(jsonPath("$.enabledFunctions", Matchers.is(hiveBotData.getEnabledFunctions())))
+                .andReturn().getRequest();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+
+    @Test
+    public void test0090SaveFunctAddInstructionsSecure() throws Exception {
+
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+        hiveBotData.getInstructions().add(new Instruction(10001,"LEDDANCE","schedule.cron:0 */1 * * * ?","",false));
+
+        //Login to Controller
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+
+        request  =  mockMvc.perform(post("/api/hivecentral/secure/save.func.add_instructions")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.status", Matchers.is("ACK")))
+                .andExpect(jsonPath("$.message", Matchers.is("Hello "+botId+". Data Info Saved.  Instructions Scheduled.")))
+                .andReturn().getRequest();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+    @Test
+    public void test0100SaveFunctOverideInstructionsSecure() throws Exception {
+
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+        hiveBotData.getInstructions().add(new Instruction(20001,"LEDDANCE","schedule.cron:0 */1 * * * ?","",false));
+
+        //Login to Controller
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+
+        request  =  mockMvc.perform(post("/api/hivecentral/secure/save.func.set_instructions")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.status", Matchers.is("ACK")))
+                .andExpect(jsonPath("$.message", Matchers.is("Hello "+botId+". Data Info Saved.  Instructions Scheduled.")))
+                .andReturn().getRequest();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+    @Test
+    public void test0110RemoveInstructionsSecure() throws Exception {
+
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+        //hiveBotData.getInstructions().add(new Instruction(20001,"LEDDANCE","schedule.cron:0 */1 * * * ?","",false));
+
+        //Login to Controller
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+
+        request  =  mockMvc.perform(post("/api/instrschedule/secure/remove")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("instrjobkey",botId+"_20001")
+                .param("hiveBotId",botId)
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.statusCode", Matchers.is(0)))
+                .andExpect(jsonPath("$.message", Matchers.is("Removed")))
+                .andReturn().getRequest();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
 
     /*
     @Test
@@ -474,9 +652,6 @@ public class BotControllerTest extends  BaseControllerTest{
     */
 
 
-    @Test
-    public void test99DummyPlaceholder() {
-        Assert.assertEquals(1,1);
-    }
+
 
 }

@@ -1,10 +1,7 @@
 package com.oom.hive.central;
 
 import com.google.common.collect.ImmutableList;
-import io.swagger.models.HttpMethod;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,6 +26,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                                         + "/secure/check.access";
     private static String STATIC_PAGE_ALTERNATE_LOGIN_FORM = "/alternate.loginform.html";
 
+    private static String HTTP_PARAM_NOFORMS = "noforms";
+
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
@@ -41,24 +39,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     }
-
-
-    /* HTTP Basic Authentication without Form , Working Example
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.
-                authorizeRequests()
-                .antMatchers("/api/* * /secure / * *").hasAuthority("USER").anyRequest() # remova spaces in expr
-                .authenticated().and().csrf().disable()
-                .httpBasic()
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/api/session/public/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
-    }
-     */
-
 
 
     @Override
@@ -81,22 +61,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     //.failureUrl(STATIC_PAGE_ALTERNATE_LOGIN_FORM)
                     .defaultSuccessUrl(DEF_SECURE_AREA_REDIRECT_URL)
                     .successHandler((request,response,authentication)->{
-                        logger.info("User Authenticated " + authentication.getPrincipal()
-                                + " Respond With NO Forms : " +
-                                "true".equalsIgnoreCase(request.getParameter("noforms"))
+                        logger.info("User Authenticated {} Respond With NO Forms : {}"
+                                ,authentication.getPrincipal(),
+                                "true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))
                         );
-                        if("true".equalsIgnoreCase(request.getParameter("noforms"))){
+                        if("true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))){
                             response.setStatus(response.SC_OK,"User Authenticated.");
                         }else{
-                            //TODO we dont have Post Form Logon Secure area to redirect yet.
                             response.sendRedirect(DEF_SECURE_AREA_REDIRECT_URL );
                         }
                     })
                     .failureHandler((request,response,e)->{
-                        logger.info("User Authentication Failure " + e.getMessage() + " Respond With NO Forms : " +
-                                "true".equalsIgnoreCase(request.getParameter("noforms"))
+                        logger.info("User Authentication Failure {} Respond With NO Forms : {}" ,
+                                e.getMessage(),
+                                "true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))
                         );
-                        if("true".equalsIgnoreCase(request.getParameter("noforms"))){
+                        if("true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))){
                             response.sendError(response.SC_UNAUTHORIZED,"User Authentication failure");
                         }else{
                             response.sendRedirect(STATIC_PAGE_ALTERNATE_LOGIN_FORM );
@@ -107,10 +87,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                     .logoutUrl(SPRING_SECURITY_BASE_CONTEXT +"/logout")
                     .logoutSuccessHandler((request,response,auth)->{
-                        logger.info("User Logout Successfull " +  " Respond With NO Forms : " +
-                                "true".equalsIgnoreCase(request.getParameter("noforms"))
+                        logger.info("User Logout Successfull,  Respond With NO Forms : {}" ,
+                                "true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))
                         );
-                        if("true".equalsIgnoreCase(request.getParameter("noforms"))){
+                        if("true".equalsIgnoreCase(request.getParameter(HTTP_PARAM_NOFORMS))){
                             response.setStatus(response.SC_ACCEPTED);
                         }else{
                             response.sendRedirect(STATIC_PAGE_ALTERNATE_LOGIN_FORM );
@@ -120,7 +100,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint((request,response,authException)->{
                     if(authException!=null){
-                        logger.warn("Attempted Access on Secure resource." +request.getRequestURI());
+                        logger.warn("Attempted Access on Secure resource.{}" ,request.getRequestURI());
                         /* For  API Access Request dont sent to relogin Form */
                         if(request.getRequestURI().contains("/api/")){
                             response.sendError(response.SC_UNAUTHORIZED,"User Unauthorized Access");
