@@ -1,38 +1,24 @@
 package com.oom.hive.central.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oom.hive.central.HiveCentralMain;
 import com.oom.hive.central.model.HiveBotData;
 import com.oom.hive.central.model.Instruction;
-import com.oom.hive.central.service.BotReportingService;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.mockito.MockitoAnnotations;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpSession;
 
@@ -42,9 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest
@@ -56,13 +41,30 @@ import java.util.Random;
 @TestPropertySource(
         locations = "classpath:application-unit.test.properties")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class BotControllerTest extends  BaseControllerTest{
+public class BotControllerTest extends BaseTester {
+
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BotControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    protected org.springframework.core.env.Environment env;
+
     static final String LOGIN_USER_ACCOUNT = "guest";
     static final String LOGIN_USER_ACCOUNT_PASSWORD = "pass123";
+
+    /*@Test
+    public void test0000CheckDebugEnabledForCodeCoverage(){
+        Assert.assertTrue(logger.isDebugEnabled());
+    }*/
+
+    @Test
+    public void test0000CheckSpringProfilesActive(){
+        List<String> profiles = Arrays.asList(env.getActiveProfiles());
+        Assert.assertTrue(profiles.contains("ModuleNEACollect"));
+        Assert.assertTrue(profiles.contains("ModuleMQTT"));
+    }
 
     @Test
     public void test0010CheckAccessPublic() throws Exception {
