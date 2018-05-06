@@ -40,7 +40,7 @@ public class MQTTInboundHandler implements MessageHandler {
                 sBuffer.append(" " + key + " = " + value);
             });
             logger.info("MQTT Received  <  <  < ");
-            logger.info("MQTT < Message Header({})", sBuffer.toString());
+            logger.info("MQTT < Message Header({})", sBuffer);
             logger.info("MQTT < Payload ({})",message.getPayload().toString());
 
             //if (1 > 0) return;

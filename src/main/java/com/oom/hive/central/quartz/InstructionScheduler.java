@@ -225,17 +225,18 @@ public class InstructionScheduler {
         return instructionJobSchedules;
     }
 
-    public static final Comparator<InstructionJobSchedule> insrJobComparator = new Comparator<InstructionJobSchedule>() {
-        public int compare(InstructionJobSchedule s1, InstructionJobSchedule s2) {
-            Date jobSchedule1 = s1.getNextFireTime();
-            Date jobSchedule2 = s2.getNextFireTime();
-            if(jobSchedule1!=null && jobSchedule2!=null){
-                return jobSchedule1.compareTo(jobSchedule2);
-            }else{
-                return s1.getKey().compareTo(s2.getKey());
-            }
+
+    public static final Comparator<InstructionJobSchedule> insrJobComparator =
+    (InstructionJobSchedule s1,InstructionJobSchedule s2)-> {
+        Date jobSchedule1 = s1.getNextFireTime();
+        Date jobSchedule2 = s2.getNextFireTime();
+        if(jobSchedule1!=null && jobSchedule2!=null){
+            return jobSchedule1.compareTo(jobSchedule2);
+        }else{
+            return s1.getKey().compareTo(s2.getKey());
         }
     };
+
 
 
     private Boolean isJobPaused(JobKey jobKey) throws SchedulerException {

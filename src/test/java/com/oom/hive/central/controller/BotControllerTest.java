@@ -23,7 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +33,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import javax.servlet.http.HttpSession;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,23 +61,168 @@ public class BotControllerTest extends  BaseControllerTest{
     @Autowired
     private MockMvc mockMvc;
 
+    static final String LOGIN_USER_ACCOUNT = "guest";
+    static final String LOGIN_USER_ACCOUNT_PASSWORD = "pass123";
 
     @Test
-    public void test01Register() throws Exception {
+    public void test0010CheckAccessPublic() throws Exception {
         HiveBotData hiveBotData = new HiveBotData();
         hiveBotData.setHiveBotId(botId);
         hiveBotData.setHiveBotVersion(botVersion);
 
-        String responseBody =  mockMvc.perform(post("/hivecentral/iot.bot/register")
+        String responseBody =  mockMvc.perform(post("/api/session/public/check.access")
                 .contentType(APPLICATION_JSON)
                 .content(json(hiveBotData))
         ).andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.message", Matchers.is("Hello. 'MOCKED.BOT.001'. Welcome to HiveCentral. Use AccessKey for further xchange.")))
-                .andExpect(jsonPath("$.accessKey", Matchers.is("8036e8b4844ffa957362e21b49aea18508b70dad07b22d4460c6649fd7f4d779")))
+                .andExpect(jsonPath("$.statusCode", Matchers.is(0)))
+                .andExpect(jsonPath("$.message", Matchers.is("Ack:")))
                 .andReturn().getResponse().getContentAsString();
-        //System.out.println(responseBody);
     }
 
+
+    @Test
+    public void test0020CheckAccessSecureWithLogin() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+
+        String responseBody =  mockMvc.perform(post("/api/session/secure/check.access")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().isUnauthorized())
+                .andReturn().getResponse().getContentAsString();
+
+        //Test With Wrong account
+
+        mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password","wrongpassword")
+                .param("noforms","true")
+        ).andExpect(status().isUnauthorized());
+
+        //Test with Correct Account.
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+        //Check Access is working now
+        session = mockMvc.perform(post("/api/session/secure/check.access")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andReturn().getRequest().getSession();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+
+        // Secure Access should be blocked now
+        mockMvc.perform(post("/api/session/secure/check.access")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().isUnauthorized())
+                .andReturn().getResponse().getContentAsString();
+    }
+
+
+
+    @Test
+    public void test0030GetAllClientsPublic() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+
+        String responseBody =  mockMvc.perform(get("/api/hivecentral/public/all.clients")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.ackSuccess", Matchers.is("OK")))
+                .andExpect(jsonPath("$.message", Matchers.is("List of Clients")))
+                .andReturn().getResponse().getContentAsString();
+
+    }
+
+    @Test
+    public void test0040GetAllScheduledPublic() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+
+        String responseBody =  mockMvc.perform(get("/api/hivecentral/public/all.scheduled")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+
+    }
+
+    @Test
+    public void test0050GetInfoPublic() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+        hiveBotData.setAccessKey(accessKey);
+
+        String responseBody =  mockMvc.perform(post("/api/hivecentral/public/get.info")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+        ).andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+
+    }
+
+
+
+    @Test
+    public void test0060RegisterNewBotSecure() throws Exception {
+        HiveBotData hiveBotData = new HiveBotData();
+        hiveBotData.setHiveBotId(botId);
+        hiveBotData.setHiveBotVersion(botVersion);
+
+        MockHttpServletRequest request = mockMvc.perform(post("/app/security/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username",LOGIN_USER_ACCOUNT)
+                .param("password",LOGIN_USER_ACCOUNT_PASSWORD)
+                .param("noforms","true")
+        ).andExpect(status().is2xxSuccessful()).andReturn().getRequest();
+        HttpSession session = request.getSession();
+
+
+        //Login to Controller
+        request  =  mockMvc.perform(post("/api/hivecentral/secure/register.new")
+                .contentType(APPLICATION_JSON)
+                .content(json(hiveBotData))
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.message", Matchers.is("Hello. 'MOCKED.BOT.001'. Welcome to HiveCentral. Use AccessKey for further xchange.")))
+                .andExpect(jsonPath("$.accessKey", Matchers.is("8036e8b4844ffa957362e21b49aea18508b70dad07b22d4460c6649fd7f4d779")))
+                .andReturn().getRequest();
+
+
+        //Logout of Connected Session.
+        mockMvc.perform(post("/app/security/logout")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noforms","true")
+                .session((MockHttpSession) session)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+    /*
     @Test
     public void test02GetInfo() throws Exception {
         HiveBotData hiveBotData = new HiveBotData();
@@ -320,8 +469,10 @@ public class BotControllerTest extends  BaseControllerTest{
                 .andExpect(jsonPath("$.dataMap.[\"data.map.size\"]", Matchers.is("1")))
                 .andExpect(jsonPath("$.dataMap.[\"instruction.coll.size\"]", Matchers.is("0")))
                 .andReturn().getResponse().getContentAsString();
-        */
+        * /
     }
+    */
+
 
     @Test
     public void test99DummyPlaceholder() {

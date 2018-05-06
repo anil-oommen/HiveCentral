@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
+
 
 @Component
 @Profile({"ModuleMQTT"})
@@ -69,7 +69,7 @@ public class MQTTOutboundEndpoint {
     @Bean
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
-        logger.info("MQTT Server URL {0}", mqttUrl);
+        logger.info("MQTT Server URL {}", mqttUrl);
         factory.setServerURIs(mqttUrl);
         if(StringUtils.isEmpty(mqttUser)){
             logger.warn("MQTT No UserName/Password set. Will connect without any");
