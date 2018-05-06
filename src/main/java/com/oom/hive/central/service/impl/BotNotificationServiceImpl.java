@@ -26,11 +26,13 @@ public class BotNotificationServiceImpl implements BotNotificationService{
     @Autowired
     private JsonLogHelper jsobLogHelper;
 
-    private void _sendMessage(HiveBotData hiveBotData){
+    private void p_sendMessage(HiveBotData hiveBotData){
         jsobLogHelper.toJSONString(hiveBotData);
 
-        logger.info("MQTT Publishe  >  >  > ");
-        logger.info("MQTT > Payload (" + jsobLogHelper.toJSONString(hiveBotData) + ")");
+        if(logger.isInfoEnabled()) {
+            logger.info("MQTT Publishe  >  >  > ");
+            logger.info("MQTT > Payload ({})", jsobLogHelper.toJSONString(hiveBotData));
+        }
 
         mqttOutboundGateway.sendToMqtt(hiveBotData);
     }
@@ -39,17 +41,17 @@ public class BotNotificationServiceImpl implements BotNotificationService{
         HiveBotData hiveBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
         hiveBotData.setDataType(HiveBotDataType.EXECUTE_INSTRUCTION);
-        _sendSingleInstruction(hiveBot,hiveBotData,hiveBotInstruction);
+        p_sendSingleInstruction(hiveBot,hiveBotData,hiveBotInstruction);
     }
 
     public void updateFunctions(HiveBot hiveBot){
         HiveBotData hiveBotData = DataModeToServiceModel.buildBasicJsonData(hiveBot);
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
         hiveBotData.setDataType(HiveBotDataType.UPDATE_FUNCTIONS);
-        _sendMessage(hiveBotData);
+        p_sendMessage(hiveBotData);
     }
 
-    private void _sendSingleInstruction(HiveBot hiveBot , HiveBotData hiveBotData, HiveBotInstruction hiveBotInstruction){
+    private void p_sendSingleInstruction(HiveBot hiveBot , HiveBotData hiveBotData, HiveBotInstruction hiveBotInstruction){
         hiveBotData.getInstructions()
                 .add(new Instruction(
                         hiveBotInstruction.getInstrId(),
@@ -58,11 +60,11 @@ public class BotNotificationServiceImpl implements BotNotificationService{
                         hiveBotInstruction.getParams(),
                         hiveBotInstruction.isExecute()
                 ));
-        _sendMessage(hiveBotData);
+        p_sendMessage(hiveBotData);
     }
 
 
-    private void _sendAllInstructionsIndividually(HiveBot hiveBot, HiveBotData hiveBotData){
+    private void p_sendAllInstructionsIndividually(HiveBot hiveBot, HiveBotData hiveBotData){
         hiveBot.getInstructions()
                 .forEach(instr->{
                     if(instr.isExecute()){
@@ -74,7 +76,7 @@ public class BotNotificationServiceImpl implements BotNotificationService{
                                         instr.getSchedule(),
                                         instr.getParams(), instr.isExecute()
                                 ));
-                        _sendMessage(hiveBotData);
+                        p_sendMessage(hiveBotData);
                     }
                 }
         );
@@ -85,9 +87,9 @@ public class BotNotificationServiceImpl implements BotNotificationService{
         hiveBotData = DataModeToServiceModel.enrichFunctions(hiveBot,hiveBotData);
         hiveBotData.setDataType(HiveBotDataType.CATCHUP_POST_BOOTUP);
         //Send Basic Information without any Backlog Instruction
-        _sendMessage(hiveBotData);
+        p_sendMessage(hiveBotData);
         //Send all the backlog instructions , ordered
-        _sendAllInstructionsIndividually(hiveBot,hiveBotData);
+        p_sendAllInstructionsIndividually(hiveBot,hiveBotData);
 
     }
 

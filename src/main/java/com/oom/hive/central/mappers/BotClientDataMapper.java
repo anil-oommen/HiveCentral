@@ -3,18 +3,15 @@ package com.oom.hive.central.mappers;
 import com.oom.hive.central.AppSettings;
 import com.oom.hive.central.exception.BotDataParseException;
 import com.oom.hive.central.model.HiveBotData;
-import com.oom.hive.central.model.Instruction;
 import com.oom.hive.central.repository.model.HiveBot;
 import com.oom.hive.central.repository.model.HiveBotInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class BotClientDataMapper {
 
@@ -26,24 +23,22 @@ public class BotClientDataMapper {
     public static HiveBot enrichFromJSON(HiveBot hiveBot,
                                          HiveBotData jsonBotData,
                                          EnumSet<AppSettings.HiveSaveOperation> saveOperations
-    ) throws BotDataParseException
+    )
     {
 
-        StringBuffer stringBuffPayload = new StringBuffer();
+        StringBuilder stringBuffPayload = new StringBuilder();
         stringBuffPayload.append("JSON to OBJ "+ jsonBotData.getHiveBotId() + ":  >   (");
 
 
         if(!StringUtils.isEmpty(jsonBotData.getStatus())){
             hiveBot.setStatus(jsonBotData.getStatus());
             stringBuffPayload.append(" status:"+ hiveBot.getStatus());
-            //LOG.info("\t+"+ jsonBotData.getHiveBotId() + " status:" + hiveBot.getStatus());
         }
 
 
         if(!StringUtils.isEmpty(jsonBotData.getEnabledFunctions())){
             hiveBot.setEnabledFunctions(jsonBotData.getEnabledFunctions());
             stringBuffPayload.append(" enabledFunction:"+ hiveBot.getEnabledFunctions());
-            //LOG.info("\t+"+ jsonBotData.getHiveBotId() + " enabledFunction:" + hiveBot.getEnabledFunctions());
         }
 
 
@@ -51,7 +46,6 @@ public class BotClientDataMapper {
         if(!StringUtils.isEmpty(jsonBotData.getHiveBotVersion())){
             hiveBot.setBotVersion(jsonBotData.getHiveBotVersion());
             stringBuffPayload.append(" botVersion:"+ hiveBot.getBotVersion());
-            //LOG.info("\t+"+ jsonBotData.getHiveBotId() + " botVersion:" + hiveBot.getBotVersion());
         }
 
 
@@ -63,8 +57,7 @@ public class BotClientDataMapper {
                         new SimpleDateFormat(AppSettings.TSTAMP_FORMAT).parse(jsonBotData.getTimestamp())
                 );
             } catch (ParseException pEx) {
-                BotDataParseException bdPE = new BotDataParseException("Parse Error on HeartBeat" + pEx.getMessage());
-                throw bdPE;
+                throw new BotDataParseException("Parse Error on HeartBeat" + pEx.getMessage());
             }
         }
 
@@ -125,7 +118,9 @@ public class BotClientDataMapper {
 
 
         stringBuffPayload.append(") dataMapSize:" + dataMapSize + " instructionSize:" + instructionSize);
-        LOG.info(stringBuffPayload.toString());
+        if(LOG.isInfoEnabled()) {
+            LOG.info(stringBuffPayload.toString());
+        }
         return hiveBot;
     }
 

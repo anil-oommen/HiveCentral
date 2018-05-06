@@ -33,12 +33,12 @@ public class MQTTInboundHandler implements MessageHandler {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void handleMessage(Message<?> message) throws MessagingException {
+    public void handleMessage(Message<?> message) {
         try {
             StringBuilder sBuffer = new StringBuilder();
-            message.getHeaders().forEach((key, value) -> {
-                sBuffer.append(" " + key + " = " + value);
-            });
+            message.getHeaders().forEach((key, value) ->
+                sBuffer.append(" " + key + " = " + value)
+            );
             logger.info("MQTT Received  <  <  < ");
             logger.info("MQTT < Message Header({})", sBuffer);
             logger.info("MQTT < Payload ({})", message.getPayload().toString());
@@ -69,7 +69,7 @@ public class MQTTInboundHandler implements MessageHandler {
                 } else if (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
                         || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
                         ) {
-                    p_markInstructionCompleted(botData);
+                    pMarkInstructionCompleted(botData);
 
                 } else {
                     logger.warn("Unsupported or Null DataType Ignoring: {}", botData.getDataType());
@@ -83,16 +83,15 @@ public class MQTTInboundHandler implements MessageHandler {
             logger.warn("BadRequest Payload Ignoring: {} ", message.getPayload());
         }catch (IOException ioE){
             logger.error("MQTT JSON ParseError ", ioE);
-            return;
         }catch(Exception rEx){
             logger.error("Error Handling Message", rEx);
             throw rEx;
         }
     }
 
-    private void p_markInstructionCompleted(HiveBotData botData){
+    private void pMarkInstructionCompleted(HiveBotData botData){
         botData.getInstructions().forEach(insr->{
-            HiveBot hiveBot = reportingService.markInstructionCompleted(
+            reportingService.markInstructionCompleted(
                     botData,
                     insr.getInstrId(),
                     insr.getCommand(),

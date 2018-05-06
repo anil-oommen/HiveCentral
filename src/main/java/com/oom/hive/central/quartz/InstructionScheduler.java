@@ -118,7 +118,6 @@ public class InstructionScheduler {
 
 
         hiveBots.forEach(hiveBot ->{
-            //HiveBot hiveBot= botReportingService.getBot(itrBotId);
             logger.info("           -Scanning For Schedule in :  {} ",hiveBot.getBotId());
             List<JobScheduleModel> jobScheduleModels=
                     instructionService.getAllJobModelToInitilize(
@@ -165,7 +164,7 @@ public class InstructionScheduler {
             if(hiveBot!=null){
                 int originalSize =hiveBot.getInstructions().size();
                 hiveBot.getInstructions().removeIf(
-                        instr-> instructionJobKey.endsWith(new Long(instr.getInstrId()).toString()));
+                        instr-> instructionJobKey.endsWith(String.valueOf(instr.getInstrId())));
                 if(originalSize> hiveBot.getInstructions().size()){
                     botReportingService.saveBot(hiveBot);
                     logger.info("           --Removed HiveBot Instruction from DB: {}"  , instructionJobKey);
@@ -188,7 +187,6 @@ public class InstructionScheduler {
 
     public List<InstructionJobSchedule> getScheduledJobs() {
         List<InstructionJobSchedule> instructionJobSchedules = new ArrayList<InstructionJobSchedule>();
-        StringBuilder sb = new StringBuilder();
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey-> {
@@ -243,7 +241,6 @@ public class InstructionScheduler {
 
     private Boolean isJobPaused(JobKey jobKey) throws SchedulerException {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        //JobKey jobKey = new JobKey(jobName);
         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
         List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobDetail.getKey());
         for (Trigger trigger : triggers) {
