@@ -41,12 +41,17 @@ Current Build Image : openshift/redhat-openjdk18-openshift:1.2
 
 Building Maven Project
 ----------
-    mvn clean compile spring-boot:run
+    mvn clean compile verify spring-boot:run
+    Environment Variables = "SPRING_PROFILES_ACTIVE=ModuleNEACollect, ModuleMQTT;logging.level.org=DEBUG"
+
+    //Quick Bootup
+    spring-boot:run
+    Environment Variables = "SPRING_PROFILES_ACTIVE=ModuleNEACollect, ModuleMQTT"
 
 
 Deploying Maven Project
 ----------
-    mvn compile deploy
+    mvn compile verify deploy
     // to skip testing
     -Dmaven.test.skip=true
 
@@ -83,6 +88,9 @@ Changes to be made for ***.m2/settings.xml***
     <properties>
         <profile.distroserver.url>scp://192.168.1.xxx//PathToRepository</profile.distroserver.url>
         <profile.deployserver.url>scp://192.168.1.xxx//PathToDeploymentArea</profile.deployserver.url>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>xxx-xxxx-xxxxx</sonar.organization>
+        <sonar.login>x0x0x0x0x0x0x0x</sonar.login>
     </properties>
 </profile>
 ```
