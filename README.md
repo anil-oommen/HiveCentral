@@ -1,10 +1,10 @@
-# HiveCentral
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.oom.app%3Ahivecentral)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
+[![Quality Gate](https://sonarcloud.io/api/badges/measure?key=org.oom.app%3Ahivecentral&metric=bugs)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=org.oom.app%3Ahivecentral&metric=vulnerabilities)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=org.oom.app%3Ahivecentral&metric=coverage)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
-[![Quality Gate](https://sonarcloud.io/api/badges/measure?key=org.oom.app%3Ahivecentral&metric=bugs)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=org.oom.app%3Ahivecentral&metric=test_success_density)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.oom.app%3Ahivecentral)](https://sonarcloud.io/dashboard/index/org.oom.app%3Ahivecentral)
 
+# HiveCentral
 Web Application & Controller for the **HiveBot** IOT Devices. The controllers has services to register and maintain life cycle and the status of the IOT Bots. All IOT devices refered as **HiveBot**  have to connect via common MQTT bridge and follow the custom protocol and JSON format for data exchange.
 
 [HiveCentral Demo ](http://h2central-hive.193b.starter-ca-central-1.openshiftapps.com/ng/) hosted on OpenShift
