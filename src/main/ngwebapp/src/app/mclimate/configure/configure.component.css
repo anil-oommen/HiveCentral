@@ -1,0 +1,27 @@
+.hivedash-card {
+    max-width-disabled: 400px;
+    margin-left-disabled: 10px;
+    margin-top-disabled: 10px;
+}
+
+
+.disabled-icon {
+    color: rgb(224, 226, 226);
+    outline: none;
+    transform-disabled: scale(1.5);
+}
+
+.selected-icon {
+    color: rgb(31, 74, 85);
+    outline: none;
+}
+
+.working-icon {
+    color: rgb(31, 74, 85);
+    animation-name: pulseFrames;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    outline: none;
+}
+

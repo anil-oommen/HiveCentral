@@ -148,7 +148,6 @@ public class InstructionScheduler {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey-> {
                 try {
-                    JobDetail jobDetail = scheduler.getJobDetail(jobKey);
                     if(jobKey.getName().equals(instructionJobKey)){
                         //Found the one to Delete.
                         scheduler.deleteJob(jobKey);
@@ -186,7 +185,7 @@ public class InstructionScheduler {
 
 
     public List<InstructionJobSchedule> getScheduledJobs() {
-        List<InstructionJobSchedule> instructionJobSchedules = new ArrayList<InstructionJobSchedule>();
+        List<InstructionJobSchedule> instructionJobSchedules = new ArrayList<>();
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.getJobKeys(GroupMatcher.anyGroup()).forEach(jobKey-> {
@@ -196,7 +195,7 @@ public class InstructionScheduler {
                     final List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
                     Date nextExecution = null;
                     int priority = 0;
-                    if (triggers.size() > 0)
+                    if (!triggers.isEmpty())
                     {
                         nextExecution = triggers.get(0).getNextFireTime();
                         priority = triggers.get(0).getPriority();

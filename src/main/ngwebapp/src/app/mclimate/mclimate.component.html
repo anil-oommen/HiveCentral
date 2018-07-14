@@ -1,0 +1,18 @@
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span>HiveCentral Web Console</span>
+    <span style="font-size: 0.6em;">&nbsp;&nbsp; [ {{getAppEnv()}} ] </span>
+  </mat-toolbar>
+  
+  
+    <mat-tab-group >
+        <mat-tab label="Dashboard">
+                <div class="mainWorkarea"><mcli-dashboard></mcli-dashboard> </div>
+        </mat-tab>
+        <mat-tab label="Configure">
+                <div class="mainWorkarea"><mcli-configure></mcli-configure></div>
+        </mat-tab>
+        <mat-tab label="Charts">
+                <div class="mainWorkarea"><mcli-charts></mcli-charts></div>
+        </mat-tab>
+    </mat-tab-group>
+    

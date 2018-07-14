@@ -174,13 +174,13 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- Default plugins but added below just to exclude NGApp if we are building for war/jar -->
+			<!-- Default plugins but added below just to exclude NGWebApp if we are building for war/jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>ngapp/**</exclude>
+						<exclude>ngwebapp/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -189,7 +189,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>ngapp/**</exclude>
+						<exclude>ngwebapp/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -204,7 +204,7 @@
 						<id>exec-npm-install</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+							<workingDirectory>${project.basedir}/src/main/ngwebapp</workingDirectory>
 							<executable>npm</executable>
 							<arguments>
 								<argument>install</argument>
@@ -218,7 +218,7 @@
 						<id>exec-npm-ng-build</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+							<workingDirectory>${project.basedir}/src/main/ngwebapp</workingDirectory>
 							<executable>ng</executable>
 							<arguments>
 								<argument>build</argument>

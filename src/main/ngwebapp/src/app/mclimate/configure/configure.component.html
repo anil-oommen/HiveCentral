@@ -1,0 +1,115 @@
+<mat-card class="hivedash-card">
+  <mat-card-content>
+      <span class="hive-table-container mat-elevation-z8">
+        <mat-table #table [dataSource]="inViewDataSource">
+          <!-- headers -->
+          <ng-container matColumnDef="command">
+              <mat-header-cell *matHeaderCellDef> Command </mat-header-cell>
+              <mat-cell *matCellDef="let InstructionDetail"> {{InstructionDetail.command}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="nextFireTime">
+                <mat-header-cell *matHeaderCellDef> Next Run Time </mat-header-cell>
+                <mat-cell *matCellDef="let InstructionDetail"> {{InstructionDetail.nextFireTime}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="removeAction">
+              <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
+              <mat-cell *matCellDef="let InstructionDetail">
+                <button mat-icon-button  (click)="removeInstruction(InstructionDetail.key)"
+                color="primary">
+                  <mat-icon aria-label="Remove" >remove_circle_outline</mat-icon>
+                </button>
+              </mat-cell>
+              
+          </ng-container>
+
+          <!-- body -->
+          <mat-header-row *matHeaderRowDef="inViewColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: inViewColumns;"></mat-row>
+        </mat-table>
+        </span>
+    </mat-card-content>
+</mat-card>
+
+
+<mat-card class="hivedash-card">
+    <mat-card-content>
+        <table>
+            <tbody>
+              <tr><td>
+                  <mat-form-field>
+                      <mat-select placeholder="Bot Instructions" 
+                      [(ngModel)]="sFormModel.selectInstruction" required>
+                        <mat-option *ngFor="let instr of sFormModel.availInstructions"
+                         [value]="instr.value">
+                          {{ instr.viewValue }}
+                        </mat-option>
+                      </mat-select>
+
+                     </mat-form-field>
+                     <mat-error *ngIf="!(sFormModel.availInstructions.length > 0)">
+                      Instruction <strong>required</strong>
+                    </mat-error>
+                  <mat-form-field >
+                      <mat-select placeholder="Schedule" 
+                      [(ngModel)]="sFormModel.selectSchedule" required>
+                        <mat-option *ngFor="let isched of sFormModel.availSchedules" 
+                        [value]="isched.value">
+                          {{ isched.viewValue }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+              </td></tr> 
+              <tr><td>
+                  <mat-radio-group class="custom-radio-group" [(ngModel)]="sFormModel.selectOptAction">
+                      <mat-radio-button 
+                      class="custom-radio-button" 
+                      *ngFor="let instrAction of sFormModel.availOptActions" 
+                      [value]="instrAction.value"
+                      [checked] = "instrAction.defaultSelected"
+                      >
+                        {{instrAction.label}} &nbsp;&nbsp;&nbsp;
+                      </mat-radio-button>
+                    </mat-radio-group>
+                    
+              </td></tr>
+            </tbody>
+          </table>
+          
+    </mat-card-content>
+
+
+    <mat-card-actions>
+        <button mat-raised-button (click)="hiveCentralSendInstructions()" color="accent" >send
+        <mat-icon aria-label="Send Instructions">input</mat-icon></button>
+      </mat-card-actions>
+
+      <mat-card-actions align="right">
+        
+        <button mat-icon-button   
+          [ngClass]="{ 
+            'selected-icon' : displayUserSessionActive == 1, 
+            'working-icon' : displayUserSessionActive == -1,
+            'disabled-icon'  :displayUserSessionActive == 0}" 
+          (click)="sessionLogin()">
+            <mat-icon aria-label="ac_profile_a" >account_circle</mat-icon>
+          </button>
+
+          <button mat-icon-button   
+          [ngClass]="{ 
+            'selected-icon' : displayUserSessionActive == 1, 
+            'working-icon' : displayUserSessionActive == -1,
+            'disabled-icon'  :displayUserSessionActive == 0}" 
+          (click)="sessionLogout()">
+            <mat-icon aria-label="ac_profile_a" >exit_to_app</mat-icon>
+          </button>
+
+
+          <button mat-icon-button   
+          [ngClass]="{ 'selected-icon' : true}"
+          (click)="debugCheckHasSecureAccess()">
+            <mat-icon aria-label="ac_profile_a" >bug_report</mat-icon>
+          </button>
+      </mat-card-actions>
+</mat-card>

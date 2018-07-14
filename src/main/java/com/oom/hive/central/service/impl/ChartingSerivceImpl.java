@@ -37,7 +37,7 @@ public class ChartingSerivceImpl implements ChartingService{
 
         TemperatureHumidityTSeries thTSeries = new TemperatureHumidityTSeries(flashBackMinutes,  intervalMinutes);
         if(logger.isInfoEnabled()) {
-            logger.info("CHART Querying for Events on:{} \n\t from:{} \n\t to: {} \n\t FlashBack(Minutes) : {} \n\t Interval:(Minutes) {} ",
+            logger.info("CHART3 Querying for Events on:{} \n\t from:{} \n\t to: {} \n\t FlashBack(Minutes) : {} \n\t Interval:(Minutes) {} ",
                     hiveBotId, thTSeries.ldtStartWindowFrom.format(formatter),
                     thTSeries.ldtEndWindow.format(formatter), flashBackMinutes, intervalMinutes
             );

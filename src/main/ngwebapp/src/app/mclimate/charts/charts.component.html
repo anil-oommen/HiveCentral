@@ -1,0 +1,42 @@
+<mat-card class="hivedash-card">
+    <mat-card-content>
+        <div *ngIf="chartData">
+            <canvas id="canvas">{{ chartData }}</canvas>
+          </div>
+    </mat-card-content>
+    <mat-card-content align="center">
+            
+            <button mat-icon-button  
+            [ngClass]="{ 
+                'selected-icon' : chartTypeCurrent == 1, 
+                'working-icon' : chartTypePendingChange == 1,
+                'disabled-icon'  :chartTypeCurrent != 1 && chartTypePendingChange!= 1 }" 
+            (click)="setChartType1Hour()">
+                <mat-icon aria-label="chartType_1" >looks_one</mat-icon>
+            </button>
+            <button mat-icon-button  
+            [ngClass]="{ 
+                'selected-icon' : chartTypeCurrent == 2, 
+                'working-icon' : chartTypePendingChange == 2,
+                'disabled-icon'  :chartTypeCurrent != 2 && chartTypePendingChange!= 2 }" 
+            (click)="setChartType6Hours()">
+                <mat-icon aria-label="chartType_2" >looks_two</mat-icon>
+            </button>
+            <button mat-icon-button  
+            [ngClass]="{ 
+                'selected-icon' : chartTypeCurrent == 3, 
+                'working-icon' : chartTypePendingChange == 3,
+                'disabled-icon'  :chartTypeCurrent != 3 && chartTypePendingChange!= 3 }" 
+            (click)="setChartType24Hour()">
+                <mat-icon aria-label="chartType_3" >looks_3</mat-icon>
+            </button>
+            <button mat-icon-button  
+            [ngClass]="{ 
+                'selected-icon' : chartTypeCurrent == 4, 
+                'working-icon' : chartTypePendingChange == 4,
+                'disabled-icon'  :chartTypeCurrent != 4 && chartTypePendingChange!= 4 }" 
+            (click)="setChartType30Mins()">
+                <mat-icon aria-label="chartType_4" >gradient</mat-icon>
+            </button>
+     </mat-card-content> 
+  </mat-card>

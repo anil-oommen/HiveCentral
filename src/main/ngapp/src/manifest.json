@@ -1,9 +1,0 @@
-{
-    "short_name": "OOMM-HVCNT",
-    "name": "Angular 5.0 HiveCentral",
-    "start_url": "/ng/index.html",
-    "theme_color": "#f48c5b",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "orientation": "portrait"
-}

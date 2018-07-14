@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files 
+Disabled in favour of custom theme
+@import "~@angular/material/prebuilt-themes/purple-green.css"; 
+*/
+
+/* Added Bootstrasp for the CSS for the AlertNotification */
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css';
+
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+body {
+    margin: 0;
+}
