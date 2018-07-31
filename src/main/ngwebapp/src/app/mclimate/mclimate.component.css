@@ -3,3 +3,15 @@
     padding:10px;
 }
 
+.app-toolbar{
+    background-image: url('/assets/595793_2.jpg');
+}
+
+.app-toolbar-header-icon {
+    padding: 0 14px;
+    color: #e1efee;
+}
+
+.app-toolbar-header-spacer {
+    flex: 1 1 auto;
+}

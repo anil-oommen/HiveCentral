@@ -1,9 +1,15 @@
-  <mat-toolbar color="primary" class="app-toolbar">
-    <span>HiveCentral Web Console</span>
-    <span style="font-size: 0.6em;">&nbsp;&nbsp; [ {{getAppEnv()}} ] </span>
+  <mat-toolbar  class="app-toolbar">
+    <span>&nbsp;</span>
+
+
+     <mat-toolbar-row>
+        <span style="font-size: 1em;color: #ffffff">HiveCentral Web Console</span>
+        <span class="app-toolbar-header-spacer"></span>
+        <mat-icon class="app-toolbar-header-icon">verified_user</mat-icon>
+      </mat-toolbar-row>
   </mat-toolbar>
-  
-  
+
+
     <mat-tab-group >
         <mat-tab label="Dashboard">
                 <div class="mainWorkarea"><mcli-dashboard></mcli-dashboard> </div>
@@ -15,4 +21,5 @@
                 <div class="mainWorkarea"><mcli-charts></mcli-charts></div>
         </mat-tab>
     </mat-tab-group>
-    
+
+    <span style="font-size: 0.6em;color: #959ba5">&nbsp;&nbsp; [ {{getAppEnv()}} ] </span>
