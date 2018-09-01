@@ -78,8 +78,10 @@ public class MQTTInboundEndpoint {
      * SpringIntegration Input Wiring
      */
 
-    @Value( "${mqtt.topic.controller.receive}" )
-    private String mqttControllerRecieveTopic;
+    @Value( "${mqtt.topic.receive.controller.base}" )
+    private String mqttControllerTopicBase;
+
+
 
     @Bean
     public MessageChannel mqttInputChannel() {
@@ -97,10 +99,13 @@ public class MQTTInboundEndpoint {
 
     @Bean
     public MessageProducer mqttMessageProducer() {
-        logger.info("MQTT Registering Client: {} topic: {}" ,getMqttClientIdForInbound(), mqttControllerRecieveTopic);
+        String topicBasePattern = mqttControllerTopicBase + "*";
+
+        logger.info("MQTT Registering Client: {} topic: {}" ,getMqttClientIdForInbound(),
+                topicBasePattern);
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
                 getMqttClientIdForInbound(),
-                mqttClientFactory(), mqttControllerRecieveTopic);
+                mqttClientFactory(), topicBasePattern);
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setOutputChannel(mqttInputChannel());

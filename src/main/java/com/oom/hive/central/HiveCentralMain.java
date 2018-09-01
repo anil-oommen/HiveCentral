@@ -48,7 +48,7 @@ public class HiveCentralMain {
 			String[] beanNames = ctx.getBeanDefinitionNames();
 			Arrays.sort(beanNames);
 			for (String beanName : beanNames) {
-				logger.info("\t Bean Loaded {} ",beanName);
+				logger.trace("\t Bean Loaded {} ",beanName);
 			}
 		};
 	}
