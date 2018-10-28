@@ -42,6 +42,7 @@ public class InstructionScheduler {
     public void init() {
         logger.info("    +++++++ initializing Quartz Schedule @Context Refresh "
                 +"------------------------ ");
+        //TODO Disable to allow Startup Even if MongoDB Not available
         registerInstructionInStore();
 
         try {

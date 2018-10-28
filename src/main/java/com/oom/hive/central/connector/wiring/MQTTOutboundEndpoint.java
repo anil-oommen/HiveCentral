@@ -149,6 +149,7 @@ public class MQTTOutboundEndpoint {
                         mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic(mqttMicroClimatePublishTopic);
+        //messageHandler.setDefaultQos(1);
         return messageHandler;
     }
 

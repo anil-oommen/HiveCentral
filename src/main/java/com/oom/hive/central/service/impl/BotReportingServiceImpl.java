@@ -60,6 +60,7 @@ public class BotReportingServiceImpl implements BotReportingService{
     }
 
     public boolean authenticate(String botId, String botAccesKey){
+
         HiveBot hiveBot = hiveBotRepo.findByBotId(botId);
         return (hiveBot!=null
                 && botAccesKey.length() >= 5
@@ -106,10 +107,10 @@ public class BotReportingServiceImpl implements BotReportingService{
                 instructionRemoved,
                 foundInstructionToUpdateAsExecuteCompleted);
 
-        HiveBotEvent hiveBotEvent = new HiveBotEvent();
-        hiveBotEvent.setBotId(hiveBot.getBotId());
-        hiveBotEvent.setTime(hiveBot.getLastHearbeat());
-        hiveBotEvent.setKey("InstructionComplete:"+command);
+        String key = "InstructionComplete:"+command;
+        HiveBotEvent hiveBotEvent = HiveBotEvent.newInstance(hiveBot.getBotId(),
+                hiveBot.getLastHearbeat(),key);
+        hiveBotEvent.setKey(key);
         hiveBotEvent.setValue(
                 "id:" + instrId + ", result:" + result
         );
@@ -143,11 +144,11 @@ public class BotReportingServiceImpl implements BotReportingService{
             for (Map.Entry<String, String> entry : botData.getDataMap().entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                HiveBotEvent hiveBotEvent = new HiveBotEvent();
-                hiveBotEvent.setBotId(hiveBot.getBotId());
-                hiveBotEvent.setTime(hiveBot.getLastHearbeat());
+                HiveBotEvent hiveBotEvent = HiveBotEvent.newInstance(hiveBot.getBotId(),
+                                        hiveBot.getLastHearbeat(),key);
                 hiveBotEvent.setKey(key);
                 hiveBotEvent.setValue(value);
+                //System.err.println("EventNew: " + hiveBotEvent.getEventId() + " " + key + ":" + value);
                 hiveBotEventRepo.save(hiveBotEvent);
             }
         }

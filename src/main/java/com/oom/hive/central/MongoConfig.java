@@ -41,6 +41,8 @@ public class MongoConfig {
 
         final MongoClientOptions options = MongoClientOptions.builder()
                 //.connectTimeout(2)
+                //.maxWaitTime(1000)
+                //.socketTimeout(1000)
         .minHeartbeatFrequency(5000)
         .build();
 
