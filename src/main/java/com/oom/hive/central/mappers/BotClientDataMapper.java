@@ -27,12 +27,15 @@ public class BotClientDataMapper {
     {
 
         StringBuilder stringBuffPayload = new StringBuilder();
-        stringBuffPayload.append("JSON to OBJ "+ jsonBotData.getHiveBotId() + ":  >   (");
+        stringBuffPayload.append("\t\t"+ jsonBotData.getHiveBotId() + ":  >   (");
 
+
+        if(!StringUtils.isEmpty(jsonBotData.getDataType())){
+            stringBuffPayload.append( jsonBotData.getDataType());
+        }
 
         if(!StringUtils.isEmpty(jsonBotData.getStatus())){
             hiveBot.setStatus(jsonBotData.getStatus());
-            stringBuffPayload.append(" status:"+ hiveBot.getStatus());
         }
 
 
@@ -47,6 +50,8 @@ public class BotClientDataMapper {
             hiveBot.setBotVersion(jsonBotData.getHiveBotVersion());
             stringBuffPayload.append(" botVersion:"+ hiveBot.getBotVersion());
         }
+
+
 
 
 

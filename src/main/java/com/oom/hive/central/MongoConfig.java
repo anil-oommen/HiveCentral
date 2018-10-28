@@ -2,8 +2,10 @@ package com.oom.hive.central;
 
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.sun.javafx.binding.StringFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +39,21 @@ public class MongoConfig {
     @Bean
     public MongoTemplate mongoTemplate() {
 
+        final MongoClientOptions options = MongoClientOptions.builder()
+                //.connectTimeout(2)
+                //.maxWaitTime(1000)
+                //.socketTimeout(1000)
+        .minHeartbeatFrequency(5000)
+        .build();
+
+
         MongoClient mongoClient;
 
         if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
-            logger.warn("No UserName or Password set. Will attempt connecting directly");
-            mongoClient = new MongoClient(hostname,port);
+            logger.info(String.format("Connecting anonymous , %s:%d",hostname, port));
+            mongoClient = new MongoClient(new ServerAddress(hostname,port),options);
         }else{
-            logger.warn("Connecting with username: {} password:XXXXXX",username);
+            logger.info(String.format("Connecting as '%s' , %s:%d",username, hostname, port));
             MongoCredential mongodbConnectCreds =
                     MongoCredential.createCredential(
                             username,
@@ -54,12 +64,17 @@ public class MongoConfig {
                     new ServerAddress(hostname, port);
             mongoClient = new MongoClient(
                     mongoServerAddress,
-                    Arrays.asList(mongodbConnectCreds)
+                    Arrays.asList(mongodbConnectCreds),options
             );
         }
 
 
+
         MongoTemplate mongoTemplate = new MongoTemplate(mongoClient, database);
+        //mongoClient.
+
+        
+
         return mongoTemplate;
     }
 

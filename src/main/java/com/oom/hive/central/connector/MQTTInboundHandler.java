@@ -1,105 +1,126 @@
 package com.oom.hive.central.connector;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oom.hive.central.AppSettings;
 import com.oom.hive.central.exception.BotDataParseException;
-import com.oom.hive.central.model.HiveBotData;
-import com.oom.hive.central.model.types.HiveBotDataType;
-import com.oom.hive.central.repository.model.HiveBot;
-import com.oom.hive.central.service.BotNotificationService;
-import com.oom.hive.central.service.BotReportingService;
+import com.oom.hive.central.mdb.base.ConsumerSubQueue;
+import com.oom.hive.central.mdb.base.BaseConsumer;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.util.EnumSet;
+import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class MQTTInboundHandler implements MessageHandler {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MQTTInboundHandler.class);
 
-    @Autowired
-    BotReportingService reportingService;
+    //@Value( "${mqtt.topic.receive.controller.base}" )
+    //private String mqttControllerTopicBase;
+
+    //private Map<String, BaseConsumer> consumers;
 
     @Autowired
-    BotNotificationService notificationService;
+    private org.springframework.context.ApplicationContext context;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    /*@PostConstruct
+    public void initConsumers(){
+        if (consumers == null) {
+            consumers = new HashMap<>();
+            Map<String, Object> beans = context.getBeansWithAnnotation(ConsumerSubQueue.class);
+            for (Object bean : beans.values()) {
+                ConsumerSubQueue bmh = bean.getClass().getAnnotation(ConsumerSubQueue.class);
+                String topicQueueName = mqttControllerTopicBase + bmh.value();
+                if(StringUtils.isEmpty(topicQueueName)){
+                    logger.error(String.format("MQTT Topic/Queue for '%s' is not set!! Message Handlers %s not Registered"
+                            ,bmh.value()
+                            ,bean.getClass().getName()
+                    ));
+                }else{
+                    logger.info(String.format("MQTT Topic/Queue '%s' Registered to Message Handlers %s."
+                            ,topicQueueName
+                            ,bean.getClass().getSimpleName()
+                    ));
+                    consumers.put(topicQueueName, (BaseConsumer) bean);
+
+                }
+            }
+        }
+    }*/
+
+    public Set<BaseConsumer> findMatchingConsumer(String topicName){
+        Map<String, Object> beans = context.getBeansWithAnnotation(ConsumerSubQueue.class);
+        Set matchingConsumers = beans.values().stream()
+                .filter( bean ->
+                        Arrays.asList(bean.getClass().getAnnotation(ConsumerSubQueue.class).value())
+                                .stream()
+                                .filter(anval ->
+                                    topicName.contains(anval)
+                                )
+                                .count()>0
+                ).collect(Collectors.toSet());
+        ;
+
+        return matchingConsumers;
+    }
+
 
     @Override
     public void handleMessage(Message<?> message) {
         try {
+
+
+            String mqttTopic = message.getHeaders().get("mqtt_topic").toString();
             StringBuilder sBuffer = new StringBuilder();
             message.getHeaders().forEach((key, value) ->
                 sBuffer.append(" " + key + " = " + value)
             );
-            logger.info("MQTT Received  <  <  < ");
-            logger.info("MQTT < Message Header({})", sBuffer);
-            logger.info("MQTT < Payload ({})", message.getPayload().toString());
-
-            HiveBotData botData = null;
 
 
-            botData = objectMapper.readValue(message.getPayload().toString(),
-                    HiveBotData.class);
+            //BaseConsumer consumer = consumers.get(mqttTopic);
+            logger.info("MQTT Received  <  <  on  \"{}\" finding consumer..  \"{{}}\"",
+                    message.getHeaders().get("mqtt_topic"),
+                    sBuffer);
 
-            //Authenticate Bot
-            if (!StringUtils.isEmpty(botData.getHiveBotId())
-                    && reportingService.authenticate(botData.getHiveBotId(), botData.getAccessKey())
-                    ) {
-                if (HiveBotDataType.SENSOR_DATA.equals(botData.getDataType())) {
-                    EnumSet<AppSettings.HiveSaveOperation> saveOperations =
-                            EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
-                                    AppSettings.HiveSaveOperation.ADD_DATAMAP,
-                                    AppSettings.HiveSaveOperation.EVENTLOG_DATAMAP,
-                                    AppSettings.HiveSaveOperation.BOT_IS_ALIVE
-                            );
-                    reportingService.saveBot(botData, saveOperations);
-
-                } else if (HiveBotDataType.BOOTUP_HIVEBOT.equals(botData.getDataType())) {
-                    //At Bootup , Send CatchUp for all Missed Work.
-                    //Note , while in DeepSleep all MQTT messages are missed.
-                    notificationService.sendCatchupForBotClient(reportingService.getBot(botData.getHiveBotId()));
-                } else if (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
-                        || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
-                        ) {
-                    pMarkInstructionCompleted(botData);
-
-                } else {
-                    logger.warn("Unsupported or Null DataType Ignoring: {}", botData.getDataType());
-                }
-
-            } else {
-                logger.warn("Authentication Failed with Creds {} {} ", botData.getHiveBotId(), botData.getAccessKey());
+            Set<BaseConsumer> consumers = findMatchingConsumer(message.getHeaders().get("mqtt_topic").toString());
+            if(consumers.isEmpty()){
+                logger.error("\t\t[NO_REGISTERED_CONSUMER], Discarded Message. ");
+            }else{
+                consumers.forEach(consumer -> {
+                    logger.info("\t\tHandover to Consumer [{}]  ",consumer.getClass().getSimpleName() );
+                    consumer.handleMessage(message.getPayload().toString());
+                });
             }
+
+            /*String consumerClassName = consumer!=null?consumer.getClass().getSimpleName():"<NotAvailable>";
+
+
+
+            logger.info("MQTT Received  <  <  on  \"{}\" to [{}] \"{{}}\"",
+                    message.getHeaders().get("mqtt_topic"),
+                    consumerClassName,
+                    sBuffer);
+            logger.info("     < Payload ({}) >", message.getPayload().toString());
+            if(consumer!=null) {
+                consumer.handleMessage(message.getPayload().toString());
+            }else{
+                logger.warn("     < No Registered Consumer. Message Discarded>");
+            }*/
+
+
 
         } catch (BotDataParseException bEx) {
             logger.warn("BadRequest Payload Ignoring: {} ", message.getPayload());
-        }catch (IOException ioE){
-            logger.error("MQTT JSON ParseError ", ioE);
         }catch(Exception rEx){
             logger.error("Error Handling Message", rEx);
             throw rEx;
         }
     }
 
-    private void pMarkInstructionCompleted(HiveBotData botData){
-        botData.getInstructions().forEach(insr->{
-            reportingService.markInstructionCompleted(
-                    botData,
-                    insr.getInstrId(),
-                    insr.getCommand(),
-                    (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())?"Completed Sucessfull":"Completed Failed."),
-                    EnumSet.of(AppSettings.HiveSaveOperation.SAVE_INFO,
-                            AppSettings.HiveSaveOperation.BOT_IS_ALIVE
-                            )
-            );
-        });
-    }
+
 }

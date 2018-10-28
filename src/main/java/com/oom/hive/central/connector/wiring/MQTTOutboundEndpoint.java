@@ -89,12 +89,6 @@ public class MQTTOutboundEndpoint {
      * SpringIntegration Input Wiring
      */
 
-    @Value( "${mqtt.topic.controller.receive}" )
-    private String mqttControllerRecieveTopic;
-
-
-
-
     /*
      * SpringIntegration Output Wiring
      */
@@ -106,9 +100,11 @@ public class MQTTOutboundEndpoint {
 
     @Router(inputChannel="mqttOutboundChannel")
     public String route(HiveBotData botData) {
-        String destinationChannel = "mqttOutboundJSONTransformDiscardDeadQueue"; // Default
-        if(botData.getHiveBotId().contains("MICLIM")){
-            destinationChannel =  "mqttOutboundJSONTransformMicroClimateBOT";
+        String destinationChannel = "pubDiscardJSONTransformer"; // Default
+        if(botData.getHiveBotId().contains(mqttMicroClimateBotPattern)){
+            destinationChannel =  "pubMicroClimateJSONTransform";
+        }else if(botData.getHiveBotId().contains(mqttWeaFcastCollectorBotPattern)){
+            destinationChannel = "pubWeaFcastCollectorJSONTransform";
         }
         logger.info("MQTT Routing  > {} to '{}'", botData.getHiveBotId(),destinationChannel );
         return destinationChannel;
@@ -121,25 +117,31 @@ public class MQTTOutboundEndpoint {
     }
 
 
-    /* 'microclima' ServiceActivator */
-    @Value( "${mqtt.topic.microclima.publish}" )
+    /* ******************************************************
+    * 'microclima' ServiceActivator & Transformer
+    *
+    * *******************************************************/
+    @Value( "${mqtt.topic.publish.botclients.microclimate}" )
     private String mqttMicroClimatePublishTopic;
+    @Value ("MICLIM")
+    private String mqttMicroClimateBotPattern;
 
-    @Value( "${mqtt.topic.microclima.publish.retained.will}" )
-    private String mqttMicroClimateRetainedWillTopic;
+    //@Value( "${mqtt.topic.microclima.publish.retained.will}" )
+    //private String mqttMicroClimateRetainedWillTopic;
 
     @Bean
-    @Transformer(inputChannel = "mqttOutboundJSONTransformMicroClimateBOT",
-            outputChannel = "mqttOutboundChannelMicroClimateBOT")
+    @Transformer(
+            inputChannel = "pubMicroClimateJSONTransform",
+            outputChannel = "pubMicroClimateQueue")
     public ObjectToJsonTransformer transformMicroClimateMessage() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        logger.info("Transformer Object >>> JSON" );
+        logger.trace("Transformer Object >>> JSON" );
         return new ObjectToJsonTransformer(new Jackson2JsonObjectMapper(mapper));
     }
 
     @Bean
-    @ServiceActivator(inputChannel = "mqttOutboundChannelMicroClimateBOT")
+    @ServiceActivator(inputChannel = "pubMicroClimateQueue")
     public MessageHandler mqttOutboundMicroClimate() {
         MqttPahoMessageHandler messageHandler =
                 new MqttPahoMessageHandler(
@@ -147,22 +149,60 @@ public class MQTTOutboundEndpoint {
                         mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic(mqttMicroClimatePublishTopic);
+        //messageHandler.setDefaultQos(1);
         return messageHandler;
     }
 
 
-    /* 'Discarded' ServiceActivator */
+    /* ******************************************************
+     * 'neacollector' ServiceActivator & Transformer
+     *
+     * *******************************************************/
+    @Value( "${mqtt.topic.publish.controller.weatforecast}" )
+    private String mqttWeaFcastCollectorPublishTopic;
+    @Value ("GOVSG.WEATHER")
+    private String mqttWeaFcastCollectorBotPattern;
+
+
     @Bean
-    @Transformer(inputChannel = "mqttOutboundJSONTransformDiscardDeadQueue",
-            outputChannel = "mqttOutboundDiscardDeadQueue")
+    @Transformer(
+            inputChannel = "pubWeaFcastCollectorJSONTransform",
+            outputChannel = "pubWeaFcastCollectorQueue")
+    public ObjectToJsonTransformer transformWeaFcastCollectorMessage() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        logger.trace("Transformer Object >>> JSON" );
+        return new ObjectToJsonTransformer(new Jackson2JsonObjectMapper(mapper));
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "pubWeaFcastCollectorQueue")
+    public MessageHandler mqttOutboundWeaFcastCollector() {
+        MqttPahoMessageHandler messageHandler =
+                new MqttPahoMessageHandler(
+                        getMqttClientIdForOutbound(),
+                        mqttClientFactory());
+        messageHandler.setAsync(true);
+        messageHandler.setDefaultTopic(mqttWeaFcastCollectorPublishTopic);
+        return messageHandler;
+    }
+
+    /* ******************************************************
+     * 'Discarded' ServiceActivator & Transformer
+     *
+     * *******************************************************/
+
+    @Bean
+    @Transformer(
+            inputChannel = "pubDiscardJSONTransformer",
+            outputChannel = "pubDiscardDeadQueue")
     public org.springframework.integration.transformer.Transformer transformDiscardMessages() {
-        logger.info("Transformer Object >>> JSON" );
         return new ObjectToJsonTransformer();
     }
 
-    @ServiceActivator(inputChannel = "mqttOutboundDiscardDeadQueue")
+    @ServiceActivator(inputChannel = "pubDiscardDeadQueue")
     public void handleDiscardDeadQueue(String botData) {
-        logger.error("Discarded Message {}" , botData);
+        logger.error("Discarded Message intended for Publish {}" , botData);
     }
 
 

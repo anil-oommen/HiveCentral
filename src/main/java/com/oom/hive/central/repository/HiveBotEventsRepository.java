@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface HiveBotEventsRepository extends MongoRepository<HiveBotEvent, Long> {
+public interface HiveBotEventsRepository extends MongoRepository<HiveBotEvent, String> {
 
     @Query(value="{$and: [ " +
             "  {botId: ?0 }, " +

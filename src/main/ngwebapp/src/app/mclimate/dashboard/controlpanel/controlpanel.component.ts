@@ -116,6 +116,7 @@ export class ControlpanelComponent implements OnInit {
 
   saveFunctionOnSlide(){
     let enFunctions = this.constructFuctionsFromUX();
+    console.log("Set Functions String:" + this.slideFuncInfraSensor);
     this.hiveService.saveSettingsSecured(
       enFunctions,true);
   }
