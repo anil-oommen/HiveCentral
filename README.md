@@ -1,8 +1,6 @@
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.oom.app%3Ahivecentral-springboot-ng-starter&metric=security_rating)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.oom.app%3Ahivecentral-springboot-ng-starter&metric=alert_status)
 
-https://sonarcloud.io/api/project_badges/measure?project=com.oom.app%3Ahivecentral-springboot-ng-starter&metric=alert_status
-
 # HiveCentral
 Web Application & Controller for the **HiveBot** IOT Devices. The controllers has services to register and maintain life cycle and the status of the IOT Bots. All IOT devices refered as **HiveBot**  have to connect via common MQTT bridge and follow the custom protocol and JSON format for data exchange.
 
