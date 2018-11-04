@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>hivewebapp-ui</artifactId>
+	<name>hivewebapp-ui</name>
+	<description>Ng Module for HiveCentral</description>
+
+
+	<parent>
+		<artifactId>hivecentral-springboot-ng-starter</artifactId>
+		<groupId>com.oom.app</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+
+	<properties>
+		<main.basedir>${project.parent.basedir}</main.basedir>
+		<checkstyle.skip>true</checkstyle.skip>
+	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>ui-dist</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+		  <plugin>
+			<artifactId>maven-clean-plugin</artifactId>
+			<version>2.5</version>
+			<configuration>
+			  <filesets>
+				<fileset>
+				  <directory>ui-dist</directory>
+				  <includes>
+					<include>*</include>
+				  </includes>
+				</fileset>
+				<fileset>
+				  <directory>node</directory>
+				  <includes>
+					<include>**/*</include>
+				  </includes>
+				</fileset>
+				<fileset>
+				  <directory>node_modules</directory>
+				  <includes>
+					<include>**/*</include>
+				  </includes>
+				</fileset>
+			  </filesets>
+			</configuration>
+		  </plugin>
+
+		  <plugin>
+			<groupId>com.github.eirslett</groupId>
+			<artifactId>frontend-maven-plugin</artifactId>
+			<version>1.6</version>
+			<configuration>
+			  <nodeVersion>v8.11.3</nodeVersion>
+			  <npmVersion>5.6.0</npmVersion>
+			</configuration>
+			<executions>
+			  <execution>
+				<id>install node and npm</id>
+				<goals>
+				  <goal>install-node-and-npm</goal>
+				</goals>
+			  </execution>
+			  <execution>
+				<id>npm install</id>
+				<goals>
+				  <goal>npm</goal>
+				</goals>
+			  </execution>
+			  <execution>
+				 <id>npm run build</id>
+				<goals>
+				  <goal>npm</goal>
+				</goals>
+				<configuration>
+				  <arguments>run build</arguments>
+				</configuration>
+			  </execution>
+			</executions>
+		  </plugin>
+		</plugins>
+	</build>
+
+
+</project>

@@ -25,18 +25,18 @@ Current Build Image : openshift/redhat-openjdk18-openshift:1.2
 ## Technology Stack
  - Framework & Libraries
 	 - Spring Boot & Integration
-	 - Mongo DB (Persistence NoSQL)
-	 - Angular 5.x
-	 - [mosquitto](https://mosquitto.org/) MQTT Broker
+	 - Mongo DB 3.x (Persistence NoSQL)
+	 - Angular 7.0.x
+	 - MQTT Broker
 	 - Quartz Scheduler (2.2.1)
  - IDE & tools
-	 - Angular CLI (1.6.x)
+	 - Angular CLI (7.0.x)
 	 - Nodejs & npm
 	 - Visual Studio Code (Recommended)
 	 - IntelliJ IDEA (Recommended)
 	 - Maven (Build)
  - Embedded tools and Support Libraries
-     - [hivemq-mqtt-web-client](http://hivemq.com/demos/websocket-client/) A websockets based MQTT Client for your browser.
+     - [Rabbit MQ](https://www.rabbitmq.com/) MQ/MQTT Message Broker.
      - [Swagger UI](https://swagger.io/swagger-ui/)
 
 Building Maven Project
@@ -45,7 +45,7 @@ Building Maven Project
     Environment Variables = "SPRING_PROFILES_ACTIVE=ModuleNEACollect, ModuleMQTT;logging.level.org=DEBUG"
 
     //Quick Bootup
-    spring-boot:run
+    -pl hivecontroller-svc spring-boot:run
     Environment Variables = "SPRING_PROFILES_ACTIVE=ModuleNEACollect, ModuleMQTT"
 
 
@@ -58,8 +58,8 @@ Deploying Maven Project
 
 Angular CLI for Running Development container
 ----------
-    cd src\main\ngapp
-    ng serve --host 192.168.1.100
+    cd hivewebapp-ui
+    ng serve --host 192.168.1.xxx
 
 ## Addtional Setup for Local Maven for Distro + Deployment
 Changes to be made for ***.m2/settings.xml***
