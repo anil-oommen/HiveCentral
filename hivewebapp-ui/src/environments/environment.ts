@@ -10,7 +10,7 @@
 export const environment = {
   production: false,
   appEnvVersion: 'ng Dev v2.1',
-  
+
   hiveAllScheduled : 'http://192.168.1.103:8080/api/instrschedule/public/list.all',
   hiveRemoveScheduled : 'http://192.168.1.103:8080/api/instrschedule/secure/remove',
 
@@ -22,8 +22,8 @@ export const environment = {
   mclientApiLogoutEndpoint : 'http://192.168.1.103:8080/app/security/logout',
   mclientApiCheckSecureAccess : 'http://192.168.1.103:8080/api/session/secure/check.access',
 
-  mclimateBotId : 'OOMM.HIVE MICLIM.02',
-  mclimateBotAccessKey : 'b293c9a090'
+  mclimateBotId : 'HIVEBOT_MICLIM.03',
+  mclimateBotAccessKey : '1b4b882772c'
 };
 
 
