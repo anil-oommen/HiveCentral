@@ -6,7 +6,7 @@ export const environment = {
 
   hiveAllScheduled : '/api/instrschedule/public/list.all',
   hiveRemoveScheduled : '/api/instrschedule/secure/remove',
-  
+
 
 
   mclientGetInfo : '/api/hivecentral/public/get.info',
@@ -18,6 +18,6 @@ export const environment = {
   mclientApiCheckSecureAccess : '/api/session/secure/check.access',
 
 
-  mclimateBotId : 'OOMM.HIVE MICLIM.02',
-  mclimateBotAccessKey : 'b293c9a090'
+  mclimateBotId : 'HIVEBOT_MICLIM.03',
+  mclimateBotAccessKey : '1b4b882772c'
 };
