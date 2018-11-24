@@ -55,8 +55,10 @@ Deploying Maven Project
 
 Angular CLI for Running Development container
 ----------
+    mvn clean 
     cd hivewebapp-ui
-    ng serve --host 192.168.1.xxx
+    npm install
+    npm start
 
 ## Addtional Setup for Local Maven for Distro + Deployment
 Changes to be made for ***.m2/settings.xml***
