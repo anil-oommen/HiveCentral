@@ -99,17 +99,17 @@
     </mat-card-content>
     <mat-card-content>
         <section class="function-section">
-          <mat-slide-toggle (change)='saveFunctionOnSlide()' labelPosition="after" class="function-slider" [color]="slideColor"
+          <mat-slide-toggle (change)='toggleFuncDHTTSensor($event)' labelPosition="after" class="function-slider" [color]="slideColor"
               [checked]="slideFuncDHTTSensor" [disabled]="!botFirstDataRecieved"> DHT22 Temperature Humidity Sensor 
           </mat-slide-toggle>
         </section>
         <section class="function-section">
-            <mat-slide-toggle (change)='saveFunctionOnSlide()' labelPosition="after" class="function-slider" [color]="slideColor"
+            <mat-slide-toggle (change)='toggleFuncInfraSensor($event)' labelPosition="after" class="function-slider" [color]="slideColor"
                 [checked]="slideFuncInfraSensor" [disabled]="!botFirstDataRecieved"> InfraRed Sensor (For Development)
             </mat-slide-toggle>
           </section>
           <section class="function-section">
-            <mat-slide-toggle (change)='saveFunctionOnSlide()' labelPosition="after" class="function-slider" [color]="slideColor"
+            <mat-slide-toggle (change)='toggleFuncDeepsleep($event)' labelPosition="after" class="function-slider" [color]="slideColor"
                 [checked]="slideFuncDeepsleep" [disabled]="!botFirstDataRecieved"> Power Saver with DeepSleep  
             </mat-slide-toggle>
           </section>

@@ -3,6 +3,7 @@ import {HiveCentralService} from '../../_services';
 import {SensorData,HiveBotInstruction} from '../../_models';
 import { environment } from '../../../../environments/environment';
 import { Observable,timer  } from 'rxjs';
+import { MatSlideToggleChange,MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'mcli-dboard-controlpanel',
@@ -114,7 +115,7 @@ export class ControlpanelComponent implements OnInit {
   slideFuncInfraSensor = false; 
   triggerFunctionSlidesChangedFromUX = false;
 
-  saveFunctionOnSlide(){
+  _saveFunctionOnSlide(){
     let enFunctions = this.constructFuctionsFromUX();
     this.hiveService.saveSettingsSecured(
       enFunctions,true);
@@ -137,6 +138,21 @@ export class ControlpanelComponent implements OnInit {
       + (this.slideFuncDHTTSensor?"+DHT22":"")
       + (this.slideFuncDeepsleep?"+DEEPSLEEP":"");
   }
+
+  public toggleFuncDHTTSensor(ob: MatSlideToggleChange) {
+    this.slideFuncDHTTSensor = ob.checked; 
+    this._saveFunctionOnSlide();
+  } 
+
+  public toggleFuncInfraSensor(ob: MatSlideToggleChange) {
+    this.slideFuncInfraSensor = ob.checked; 
+    this._saveFunctionOnSlide();
+  } 
+
+  public toggleFuncDeepsleep(ob: MatSlideToggleChange) {
+    this.slideFuncDeepsleep = ob.checked; 
+    this._saveFunctionOnSlide();
+  } 
 
 }
 

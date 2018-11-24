@@ -9,18 +9,18 @@
 
 export const environment = {
   production: false,
-  appEnvVersion: 'ng Dev v2.1',
+  appEnvVersion: 'v2.2.0',
 
-  hiveAllScheduled : 'http://192.168.1.103:8080/api/instrschedule/public/list.all',
-  hiveRemoveScheduled : 'http://192.168.1.103:8080/api/instrschedule/secure/remove',
+  hiveAllScheduled : '/api/instrschedule/public/list.all',
+  hiveRemoveScheduled : '/api/instrschedule/secure/remove',
 
-  mclientGetInfo : 'http://192.168.1.103:8080/api/hivecentral/public/get.info',
-  mclientSaveSettings : 'http://192.168.1.103:8080/api/hivecentral/secure/save.func.',
-  mclientChartBaseURL : 'http://192.168.1.103:8080/api/sensorchart/public/temp_humidity',
+  mclientGetInfo : '/api/hivecentral/public/get.info',
+  mclientSaveSettings : '/api/hivecentral/secure/save.func.',
+  mclientChartBaseURL : '/api/sensorchart/public/temp_humidity',
 
-  mclientApiLoginEndpoint : 'http://192.168.1.103:8080/app/security/login',
-  mclientApiLogoutEndpoint : 'http://192.168.1.103:8080/app/security/logout',
-  mclientApiCheckSecureAccess : 'http://192.168.1.103:8080/api/session/secure/check.access',
+  mclientApiLoginEndpoint : '/app/security/login',
+  mclientApiLogoutEndpoint : '/app/security/logout',
+  mclientApiCheckSecureAccess : '/api/session/secure/check.access',
 
   mclimateBotId : 'HIVEBOT_MICLIM.03',
   mclimateBotAccessKey : '1b4b882772c'
