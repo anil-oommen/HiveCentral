@@ -66,11 +66,24 @@ public class MQTTInboundHandler implements MessageHandler {
                     //At Bootup , Send CatchUp for all Missed Work.
                     //Note , while in DeepSleep all MQTT messages are missed.
                     notificationService.sendCatchupForBotClient(reportingService.getBot(botData.getHiveBotId()));
+
+                    //Take note Bot is alive, might not be sending heartBeat if in DeepSleep.
+                    EnumSet<AppSettings.HiveSaveOperation> saveOperations =
+                            EnumSet.of(
+                                    AppSettings.HiveSaveOperation.BOT_IS_ALIVE
+                            );
+                    reportingService.saveBot(botData, saveOperations);
                 } else if (HiveBotDataType.INSTRUCTION_COMPLETED.equals(botData.getDataType())
                         || HiveBotDataType.INSTRUCTION_FAILED.equals(botData.getDataType())
                         ) {
                     pMarkInstructionCompleted(botData);
 
+                } else if (HiveBotDataType.HEART_BEAT.equals(botData.getDataType())) {
+                    EnumSet<AppSettings.HiveSaveOperation> saveOperations =
+                            EnumSet.of(
+                                    AppSettings.HiveSaveOperation.BOT_IS_ALIVE
+                            );
+                    reportingService.saveBot(botData, saveOperations);
                 } else {
                     logger.warn("Unsupported or Null DataType Ignoring: {}", botData.getDataType());
                 }
