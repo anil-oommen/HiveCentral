@@ -78,6 +78,12 @@ public class MQTTInboundHandler implements MessageHandler {
                         ) {
                     pMarkInstructionCompleted(botData);
 
+                } else if (HiveBotDataType.HEART_BEAT.equals(botData.getDataType())) {
+                    EnumSet<AppSettings.HiveSaveOperation> saveOperations =
+                            EnumSet.of(
+                                    AppSettings.HiveSaveOperation.BOT_IS_ALIVE
+                            );
+                    reportingService.saveBot(botData, saveOperations);
                 } else {
                     logger.warn("Unsupported or Null DataType Ignoring: {}", botData.getDataType());
                 }
