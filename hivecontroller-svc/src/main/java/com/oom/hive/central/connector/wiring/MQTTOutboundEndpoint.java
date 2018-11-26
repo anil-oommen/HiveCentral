@@ -109,6 +109,8 @@ public class MQTTOutboundEndpoint {
         String destinationChannel = "mqttOutboundJSONTransformDiscardDeadQueue"; // Default
         if(botData.getHiveBotId().contains("MICLIM")){
             destinationChannel =  "mqttOutboundJSONTransformMicroClimateBOT";
+        }else if(botData.getHiveBotId().contains(mqttWeaFcastCollectorBotPattern)){
+            destinationChannel = "pubWeaFcastCollectorJSONTransform";
         }
         logger.info("MQTT Routing  > {} to '{}'", botData.getHiveBotId(),destinationChannel );
         return destinationChannel;
@@ -147,6 +149,37 @@ public class MQTTOutboundEndpoint {
                         mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic(mqttMicroClimatePublishTopic);
+        return messageHandler;
+    }
+
+
+    /* ******************************************************
+     * 'GOV SG Weather' ServiceActivator & Transformer
+     *
+     * *******************************************************/
+    @Value( "${mqtt.topic.publish.controller.weatforecast}" )
+    private String mqttWeaFcastCollectorPublishTopic;
+    @Value ("GOVSG.WEATHER")
+    private String mqttWeaFcastCollectorBotPattern;
+    @Bean
+    @Transformer(
+            inputChannel = "pubWeaFcastCollectorJSONTransform",
+            outputChannel = "pubWeaFcastCollectorQueue")
+    public ObjectToJsonTransformer transformWeaFcastCollectorMessage() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        logger.trace("Transformer Object >>> JSON" );
+        return new ObjectToJsonTransformer(new Jackson2JsonObjectMapper(mapper));
+    }
+    @Bean
+    @ServiceActivator(inputChannel = "pubWeaFcastCollectorQueue")
+    public MessageHandler mqttOutboundWeaFcastCollector() {
+        MqttPahoMessageHandler messageHandler =
+                new MqttPahoMessageHandler(
+                        getMqttClientIdForOutbound(),
+                        mqttClientFactory());
+        messageHandler.setAsync(true);
+        messageHandler.setDefaultTopic(mqttWeaFcastCollectorPublishTopic);
         return messageHandler;
     }
 
