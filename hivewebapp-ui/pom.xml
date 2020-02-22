@@ -11,7 +11,7 @@
 	<parent>
 		<artifactId>hivecentral-springboot-ng-starter</artifactId>
 		<groupId>com.oom.app</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-RELEASE</version>
 	</parent>
 
 
