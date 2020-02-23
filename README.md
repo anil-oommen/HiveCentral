@@ -23,11 +23,11 @@ Current Build Image : openshift/redhat-openjdk18-openshift:1.2
  - Framework & Libraries
 	 - Spring Boot & Integration
 	 - Mongo DB 3.x (Persistence NoSQL)
-	 - Angular 7.0.x
+	 - Angular 9.0.x
 	 - MQTT Broker
 	 - Quartz Scheduler (2.2.1)
  - IDE & tools
-	 - Angular CLI (7.0.x)
+	 - Angular CLI (9.0.x)
 	 - Nodejs & npm
 	 - Visual Studio Code (Recommended)
 	 - IntelliJ IDEA (Recommended)

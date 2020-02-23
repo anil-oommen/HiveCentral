@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.oom.app</groupId>
 		<artifactId>hivecentral-springboot-ng-starter</artifactId>
-    <version>0.0.3-RELEASE</version>
+    	<version>0.0.3-RELEASE</version>
 	</parent>
 	
 	<properties>
