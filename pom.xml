@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>hivecentral-springboot-ng-starter</name>
-	<description>Hive IOT Central </description>
+	<description>Hive IOT Central</description>
 	
     <parent>
         <groupId>org.springframework.boot</groupId>
