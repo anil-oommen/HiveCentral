@@ -4,12 +4,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { Observable,BehaviorSubject  } from 'rxjs';
 //import { Subject } from 'rxjs/Subject';
 import { Alert, AlertType, LoadingState } from '../_models';
-import {
-    MatSnackBar, 
-    MatSnackBarConfig,
-    MatSnackBarHorizontalPosition,
-    MatSnackBarVerticalPosition,
-  } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
   import {NotifySnackbarComponent} from '../notify-snackbar/notify-snackbar.component'
 
 @Injectable()
